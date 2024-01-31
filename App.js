@@ -1,20 +1,33 @@
+import React,{useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View ,ImageBackground,Dimensions, KeyboardAvoidingView, ScrollView} from 'react-native';
+import LoginStack from "./StackNavigatorLogin/StackNavigatorLogin.js";
+import {Header} from './components/tabnavigatorComponents.js';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>hellow neranjn !</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  if (!isRegistered){
+    return (
+              <Header/>  
+    );
+  }else{
+
+    return (
+      <View style={styles.container}>
+        <Text>Open up App.js to start working on your app!</Text>
+        <StatusBar style="auto" />
+        
+      </View>
+    );
+  }
+
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  bodyNotRegistered:{        
+    width: Dimensions.get("window").width,
+    height: "100%"
+},
 });
