@@ -1,7 +1,8 @@
 import React,{useState} from "react";
-import { View,Text,StyleSheet, StatusBar ,Image,Dimensions} from "react-native";
+import { View,Text,StyleSheet, StatusBar ,Image,Dimensions, TextInput, ScrollView,TouchableOpacity} from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 import {useFonts} from "expo-font";
+import { LinearGradient } from "expo-linear-gradient";
 
 
 // get days array
@@ -39,9 +40,122 @@ function CreateDateBar({day,weekday}) {
 }
 
 
+// search box with categories 
+function SearchBox(){   
+    const [searchText, setSearchText] = useState("");
+
+    function SearchTextHandler(text){
+            setSearchText(text);
+            console.log(searchText);
+        };
+
+    function CategoryButtonHandler(){
+        console.log("category button");
+    }
+
+    function CategoryButton({categoryName}){
+        const [fontsLoaded] = useFonts({
+            "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
+        })
+        return(
+           
+            <TouchableOpacity
+                onPress={CategoryButtonHandler}
+            >
+                <LinearGradient
+                    colors={['rgba(180,183,33,1)', 'rgba(180,183,33,0.481)', 'rgba(210,211,151,0.30)']}
+                    start={{x: 1, y: 1}}
+                    end={{x: 0, y: 0}} 
+                    style={styles.categoryButton} 
+                >
+                    <Text style={{color:"#393636",fontFamily:"Inter",fontSize:16,fontWeight:"700",alignSelf:'center'}}>{categoryName}</Text>
+                 </LinearGradient>  
+            </TouchableOpacity>
+            
+        )
+    }
+
+    return(
+        <View>
+            <LinearGradient
+                colors={["rgba(57,54,54,0.73)","rgba(57,54,54,1)"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{padding:7,borderRadius:20,margin:10,marginHorizontal:10,flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}
+            >
+                <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}>
+                    <FontAwesome name="search" size={18} color="#8F816F" />
+                    <TextInput
+                        style={{color:"#F6F3F3",marginLeft:10}}
+                        placeholder="Search Category"
+                        placeholderTextColor="#F6F3F3"
+                        onChangeText={SearchTextHandler}  
+                    />
+                </View>
+            </LinearGradient>
+            <ScrollView
+                horizontal={true}
+                style={{marginHorizontal:10}}
+            >
+                {/* category buttons EXAMPLE*/}
+                <CategoryButton categoryName="Office work"/>
+                <CategoryButton categoryName="Office work"/>
+                <CategoryButton categoryName="Office work"/>
+                <CategoryButton categoryName="Office work"/>
+                <CategoryButton categoryName="Office work"/>
 
 
-function Header(){
+            </ScrollView>
+        </View>
+    )
+};
+
+// Task list 
+function TaskList(){
+
+    function AddTaskHandler(){
+        console.log("Add task");
+    }
+
+
+    const [fontsLoaded] = useFonts({
+        "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
+    })
+    return(
+        <View>
+            <View style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center", marginHorizontal:10,marginTop:10}}>
+                <Text style={{color:"black",fontSize:20,fontWeight:"bold",fontFamily:"Inter"}}>Today's Task</Text>
+                <TouchableOpacity
+                    onPress={AddTaskHandler}
+                
+                >
+                    <LinearGradient
+                        colors={['rgba(57,54,54,0.6)', 'rgba(57,54,54,1)']}
+                        start={{x: 0, y: 0}}
+                        end={{x: 1, y: 1}} 
+                        style={styles.addButton} 
+                    >
+                    <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+                        <FontAwesome name="plus" size={20} color="#393636" />
+                        <Text style ={{color:"#00E809",fontSize:15,fontWeight:"bold",margin:10,fontFamily:"Inter"}}>
+                            Add Task
+                        </Text>
+                    </View>
+                    
+                    </LinearGradient>
+                </TouchableOpacity>
+            </View>
+            
+            <ScrollView>
+            </ScrollView>
+        </View>
+    )
+}
+
+
+
+
+function Header({headerName}){
 
     const dayList = getDaysArray();
 
@@ -58,7 +172,7 @@ function Header(){
                     <FontAwesome name ="th-large" color ="#8F816F" size={30}/>
                 </View>
                 <Text style= {{color:"#8F816F",fontWeight:"bold",fontFamily:"Inter",fontSize:24}}>
-                    Task
+                    {headerName}
                 </Text>
                 <View style={{borderRadius:25,borderWidth :2,borderColor:"#8F816F"}}>
                     <Image 
@@ -78,7 +192,7 @@ function Header(){
     )
 };
 
-export {Header};
+export {Header,SearchBox,TaskList};
 const styles = StyleSheet.create(
     {
         dateYear:{
@@ -110,6 +224,19 @@ const styles = StyleSheet.create(
             fontFamily: "Inter",
             fontSize: 16,
             fontWeight: "700",
+        },
+        categoryButton:{
+            width: 120,
+            height:50,
+            borderRadius:20,
+            justifyContent:"center",
+            textAlign:"center",
+            marginRight:15
+        },
+        addButton:{
+            width:105,
+            height:40,
+            borderRadius:15,
         }
         
 

@@ -1,8 +1,9 @@
 import React,{useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View ,ImageBackground,Dimensions, KeyboardAvoidingView, ScrollView} from 'react-native';
-import LoginStack from "./StackNavigatorLogin/StackNavigatorLogin.js";
-import {Header} from './components/tabnavigatorComponents.js';
+// import LoginStack from "./StackNavigatorLogin/StackNavigatorLogin.js";
+import {Header,SearchBox,TaskList} from './components/tabnavigatorComponents.js';
+import ProfilePage from "./setting stack screens/profile.js";
 
 export default function App() {
 
@@ -10,7 +11,15 @@ export default function App() {
 
   if (!isRegistered){
     return (
-              <Header/>  
+             <View>
+                {/* <Header
+                    headerName="Task"
+                /> 
+                <SearchBox/>
+                <TaskList/>  */}
+                {/* <AddTask/> */}
+                <ProfilePage/>
+              </View>
     );
   }else{
 
