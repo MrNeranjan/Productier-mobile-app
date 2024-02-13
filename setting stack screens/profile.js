@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(57, 54, 54, 0.5)",
         width:Dimensions.get("window").width-24,
         borderRadius: 25,
-        marginTop: 20,
+        marginTop: Dimensions.get("window").height/20,
 
     },
     Image:{ width: 150,

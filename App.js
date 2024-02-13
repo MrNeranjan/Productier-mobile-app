@@ -4,6 +4,7 @@ import { StyleSheet, Text, View ,ImageBackground,Dimensions, KeyboardAvoidingVie
 // import LoginStack from "./StackNavigatorLogin/StackNavigatorLogin.js";
 import {Header,SearchBox,TaskList} from './components/tabnavigatorComponents.js';
 import ProfilePage from "./setting stack screens/profile.js";
+import ChangePasswordPage from "./setting stack screens/passwordChange.js";
 
 export default function App() {
 
@@ -18,7 +19,8 @@ export default function App() {
                 <SearchBox/>
                 <TaskList/>  */}
                 {/* <AddTask/> */}
-                <ProfilePage/>
+                {/* <ProfilePage/> */}
+                <ChangePasswordPage/>
               </View>
     );
   }else{
