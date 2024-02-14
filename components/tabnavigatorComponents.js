@@ -192,6 +192,14 @@ function Header({headerName}){
     )
 };
 
+
+function TaskComponent(){
+    
+}
+
+
+
+
 export {Header,SearchBox,TaskList};
 const styles = StyleSheet.create(
     {

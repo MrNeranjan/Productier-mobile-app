@@ -3,8 +3,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View ,ImageBackground,Dimensions, KeyboardAvoidingView, ScrollView} from 'react-native';
 // import LoginStack from "./StackNavigatorLogin/StackNavigatorLogin.js";
 import {Header,SearchBox,TaskList} from './components/tabnavigatorComponents.js';
-import ProfilePage from "./setting stack screens/profile.js";
-import NotificationsPage from "./setting stack screens/NotificationHandle.js";
+
+
 
 export default function App() {
 
@@ -13,15 +13,15 @@ export default function App() {
   if (!isRegistered){
     return (
              <View>
-                {/* <Header
+                <Header
                     headerName="Task"
                 /> 
                 <SearchBox/>
-                <TaskList/>  */}
+                <TaskList/> 
                 {/* <AddTask/> */}
                 {/* <ProfilePage/> */}
                 {/* <ChangePasswordPage/> */}
-                <NotificationsPage/>
+                {/* <NotificationsPage/> */}
               </View>
     );
   }else{
