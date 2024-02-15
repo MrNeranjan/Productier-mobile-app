@@ -3,6 +3,7 @@ import { View,Text,StyleSheet, StatusBar ,Image,Dimensions, TextInput, ScrollVie
 import { FontAwesome } from '@expo/vector-icons';
 import {useFonts} from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
+import Checkbox from 'expo-checkbox';
 
 
 // get days array
@@ -111,7 +112,8 @@ function SearchBox(){
 };
 
 // Task list 
-function TaskList(){
+function TaskList({name,displayI}){
+
 
     function AddTaskHandler(){
         console.log("Add task");
@@ -124,7 +126,9 @@ function TaskList(){
     return(
         <View>
             <View style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center", marginHorizontal:10,marginTop:10}}>
-                <Text style={{color:"black",fontSize:20,fontWeight:"bold",fontFamily:"Inter"}}>Today's Task</Text>
+                <Text style={{color:"black",fontSize:20,fontWeight:"bold",fontFamily:"Inter"}}>{name}</Text>
+
+                {displayI ?
                 <TouchableOpacity
                     onPress={AddTaskHandler}
                 
@@ -135,15 +139,18 @@ function TaskList(){
                         end={{x: 1, y: 1}} 
                         style={styles.addButton} 
                     >
-                    <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
-                        <FontAwesome name="plus" size={20} color="#393636" />
-                        <Text style ={{color:"#00E809",fontSize:15,fontWeight:"bold",margin:10,fontFamily:"Inter"}}>
-                            Add Task
-                        </Text>
-                    </View>
+                    
+                             <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+                                    <Text style ={{color:"#00E809",fontSize:15,fontWeight:"bold",margin:10,fontFamily:"Inter"}}>
+                                        Add Task
+                                    </Text>
+                             </View> 
+
                     
                     </LinearGradient>
                 </TouchableOpacity>
+                :
+                null}
             </View>
             
             <ScrollView>
@@ -192,15 +199,57 @@ function Header({headerName}){
     )
 };
 
+// Task component for display in task list
+function TaskComponent({taskName,taskTime,taskCategory}){
 
-function TaskComponent(){
-    
+    const [fontsLoaded] = useFonts({
+        "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
+    })
+
+    const [isChecked, setChecked] = useState(false);
+
+
+    return(
+        <View style ={styles.taskListComponent}>
+
+            <View>
+                <Checkbox
+                    style={{marginLeft:15,marginRight:1}}
+                    value={isChecked}
+                    onValueChange={setChecked}
+                    color={isChecked ? "green" : "rgba(57, 54, 54, 1)"}
+                    />
+            </View>
+
+            <LinearGradient
+                colors={["rgba(161,154,107,1)","rgba(136,127,105,0.7)"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.taskListComponentText}
+            
+            >
+                <View>
+                    <Text style ={{fontFamily:"Inter",fontSize:17,fontWeight:"600"}}>
+                        {taskName}
+                    </Text>
+                    <Text style ={{fontFamily:"Inter",fontSize:12}}>
+                        {taskTime} 
+                    </Text>
+                    <Text style ={{fontFamily:"Inter",fontSize:12}}>
+                        {taskCategory}
+                    </Text>
+                </View>
+            </LinearGradient>
+        </View>
+    )
 }
 
 
 
 
-export {Header,SearchBox,TaskList};
+export {Header,SearchBox,TaskList,TaskComponent};
+
+
 const styles = StyleSheet.create(
     {
         dateYear:{
@@ -245,6 +294,21 @@ const styles = StyleSheet.create(
             width:105,
             height:40,
             borderRadius:15,
+        },
+        taskListComponentText:{
+            padding:10,
+            margin:10,
+            borderTopRightRadius:20,
+            borderBottomRightRadius:20,
+            flexDirection:"row",
+            justifyContent:"space-between",
+            alignItems:"center",
+            width:Dimensions.get("window").width-60
+        },
+        taskListComponent:{
+            flexDirection:"row",
+            justifyContent:"flex-start",
+            alignItems:"center",
         }
         
 
