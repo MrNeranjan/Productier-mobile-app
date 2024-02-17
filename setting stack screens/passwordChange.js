@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from "expo-font";
 
 
-export default function ChangePasswordPage() {
+export default function ChangePasswordPage({route}) {
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
     });

@@ -13,7 +13,9 @@ export default function Analysis(){
                 end={{ x: 1, y: 1 }}
             >
             <StatusBar/>
-            <Header/>
+            <Header
+                headerName = "Analysis"
+            />
             <SearchBox/>
             <TaskList
                 name = "Today's Task Analysis"
@@ -22,7 +24,7 @@ export default function Analysis(){
             <View style ={{alignSelf:"center",marginTop:20,marginBottom:20}}>
                 <CircularProgress
                     value={70}
-                    radius={Dimensions.get('window').width / 4}
+                    radius={Dimensions.get('window').width / 3.5}
                     duration={2000}
                     progressValueColor={'#2ecc71'}
                     maxValue={100}

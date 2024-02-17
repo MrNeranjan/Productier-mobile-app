@@ -29,7 +29,6 @@ export default function Analysis(){
 
         // Update TotalTime whenever input values change
         useEffect(() => {
-            // Calculate TotalTime based on input values whenever they change
             const totalTime = (Minutes * 60) + (hours * 3600) + (days * 3600 * 24);
             setTotalTime(totalTime);
         }, [Minutes, hours, days]);
@@ -62,9 +61,11 @@ export default function Analysis(){
                 end={{ x: 1, y: 1 }}
             >
             <StatusBar/>
-            <Header/>
+            <Header
+                headerName = "Timer"
+            />
             <View style ={{flexDirection:"row",alignItems:"center",justifyContent:"space-evenly",marginTop:40}}>
-                <Text style={{fontSize:25,fontFamily:"Inter",fontWeight:"bold",color:"rgba(57, 54, 54, 1)"}}>Set Timer</Text>
+                <Text style={{fontSize:30,fontFamily:"Inter",fontWeight:"bold",color:"rgba(57, 54, 54, 1)"}}>Set Timer</Text>
                 <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-evenly"}}>
                                 <View>
                                     <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
@@ -166,7 +167,7 @@ export default function Analysis(){
                             const minutesStr = String(minutes).padStart(2, '0');
                             const secondsStr = String(seconds).padStart(2, '0');
                         
-                            return (totalTime ? `${hoursStr}:${minutesStr}:${secondsStr}`:"00:00:00");
+                            return (totalTime  ? `${hoursStr}:${minutesStr}:${secondsStr}`:"00:00:00");
                         }}
                     />
             </View>
@@ -178,7 +179,7 @@ export default function Analysis(){
                     <Text style ={styles.textBottom}>Resume</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={RePlayHandler} style={styles.button}>
-                    <Text style ={styles.textBottom}>Play</Text>
+                    <Text style ={styles.textBottom}>Re/Start</Text>
                 </TouchableOpacity>
             </View>
             </LinearGradient>
@@ -202,7 +203,7 @@ const styles =StyleSheet.create({
     },
     button: {
         backgroundColor: 'rgba(57, 54, 54, 0.8)',
-        width:Dimensions.get("window").width/4,
+        width:Dimensions.get("window").width/3.6,
         padding: 10,
         borderRadius: 10,
         borderWidth:2,

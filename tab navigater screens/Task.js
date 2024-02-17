@@ -36,11 +36,11 @@ export default function Task(){
                 colors={['rgba(57, 54, 54, 0.8)', 'rgba(166, 138, 103, 1)']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                
-            
             >
             <StatusBar/>
-            <Header/>
+            <Header
+                headerName = "Task"
+            />
             <SearchBox/>
             <TaskList
                 name = "Today's Task"
