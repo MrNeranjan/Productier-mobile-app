@@ -5,19 +5,29 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { useFonts } from "expo-font";
+import { useNavigation } from '@react-navigation/native';
+import  {useStore}  from  "../store/Store.js";
 
 export default function ProfilePage() {
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
     });
 
-    const [dateBirth, setdateBirth] = useState(new Date());
+    // getting personal details from the store
+    const personalDetails = useStore((state) => state.PersonalDetails);
+    const list = useStore((state) => state.CategoryList);
+    console.log(list)
+
+    // handling the personal details
+     const date = new Date(personalDetails.dateOfBirth);
+    
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [image, setImage] = useState(null);
+    const [name, setName] = useState(personalDetails.name);
+    const [email, setEmail] = useState(personalDetails.email);
+    const [dateBirth, setdateBirth] = useState(date);
+    const [phoneNumber, setPhoneNumber] = useState(personalDetails.phoneNumber);
+    const [image, setImage] = useState(personalDetails.image);
 
     // HANDLING IMAGE PICKER
     async function pickImage() {
@@ -33,6 +43,7 @@ export default function ProfilePage() {
             setImage(result.assets[0].uri);
             
         }
+
     }
     
     // handling the date fo birth input
@@ -47,24 +58,55 @@ export default function ProfilePage() {
     }
     const showDatepicker = () => {
         showMode('date');
+        
     };
 
 
     // handling the name input
      function handleNameChange(text) {
         setName(text);
+      
         
      }
 
     // handling the email input
     function handleEmailChange(text) {
         setEmail(text);
+      
+
     }
 
     // handling the phone number input
     function handlePhoneNumberChange(text) {
         setPhoneNumber(text);
+        
     }
+
+    // save the details
+    function SaveDetails() {
+        useStore.setState(prevState => ({
+          ...prevState,
+          PersonalDetails: {
+            name: name,
+            email: email,
+            phoneNumber: phoneNumber,
+            dateOfBirth: dateBirth ? dateBirth : new Date(),
+            image: image
+          }
+        }));
+      }
+
+
+
+    // go back function
+    const navigation = useNavigation();
+    function GoBack() {
+        navigation.goBack();
+    }
+
+
+
+
 
     return(
         <LinearGradient
@@ -76,7 +118,7 @@ export default function ProfilePage() {
         >
             <StatusBar/>
             <View style={styles.topBar}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={GoBack}>
                     <FontAwesome name="chevron-left" size={24} color="#8F816F" />
                 </TouchableOpacity>
                 <Text style={{ color: "#8F816F", fontSize: 18, fontWeight: "bold" ,fontFamily:"Inter" }}>Profile</Text>
@@ -98,11 +140,12 @@ export default function ProfilePage() {
                         </View>
                         <View>
                             <Text style={styles.title}>
-                                Name
+                                First Name
                             </Text>
                             <TextInput
                                 placeholder='Enter your name'
                                 onChangeText={handleNameChange}
+                                value = {name}
                                 style={styles.inputBox}
                             />
                         </View>
@@ -113,6 +156,7 @@ export default function ProfilePage() {
                             <TextInput
                                 placeholder='Ex : example@gmail.com'
                                 onChangeText={handleEmailChange}
+                                value = {email}
                                 style={styles.inputBox}
                             />
                         </View>
@@ -152,11 +196,12 @@ export default function ProfilePage() {
                                 placeholder=' Ex: 0776236781'
                                 keyboardType='numeric'
                                 maxLength={10}
+                                value = {phoneNumber}
                                 style={styles.inputBox}
                                 onChangeText={handlePhoneNumberChange}
                             />
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={SaveDetails}>
 
                             <LinearGradient
                                 colors={['rgba(180,183,33,1)', 'rgba(180,183,33,0.481)', 'rgba(210,211,151,0.30)']}

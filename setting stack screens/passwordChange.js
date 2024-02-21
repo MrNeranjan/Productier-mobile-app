@@ -3,6 +3,7 @@ import { Image,StyleSheet, Text, View, TextInput, TouchableOpacity, Button,Alert
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from "expo-font";
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function ChangePasswordPage({route}) {
@@ -35,6 +36,12 @@ export default function ChangePasswordPage({route}) {
         setConfirmPassword(text);
     }
 
+    // go back 
+    const navigation = useNavigation();
+    function GoBack(){
+        navigation.goBack();
+    }
+
     return (
         <LinearGradient
         colors={['rgba(57, 54, 54, 0.8)', 'rgba(166, 138, 103, 1)']}
@@ -45,7 +52,7 @@ export default function ChangePasswordPage({route}) {
     >
         <StatusBar/>
         <View style={styles.topBar}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={GoBack}>
                 <FontAwesome name="chevron-left" size={24} color="#8F816F" />
             </TouchableOpacity>
             <Text style={{ color: "#8F816F", fontSize: 18, fontWeight: "bold" ,fontFamily:"Inter" }}>Change Password</Text>

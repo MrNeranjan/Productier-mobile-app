@@ -4,9 +4,11 @@ import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from '@react-navigation/native';  
 import { useFonts } from "expo-font";
-import ProfilePage from "../setting stack screens/profile";
+import {useStore} from "../store/Store.js";
 
 function SettingSection({iconName,settingName,navigatePage}){
+
+    
 
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
@@ -41,6 +43,7 @@ function SettingSection({iconName,settingName,navigatePage}){
 };
 
 export default function Settings(){
+    const profileDetails = useStore((state) => state.PersonalDetails);
     const navigation = useNavigation();
 
     function ProfilePage(){
@@ -61,12 +64,12 @@ export default function Settings(){
             </View>
             <View style ={styles.imageBox} >
                 <Image
-                    source = {require("../assets/sources/loginpages/profilePic.png")}
+                    source={profileDetails.image ? { uri: profileDetails.image } : require("../assets/sources/loginpages/profilePic.png")}
                     style={styles.Image}
                 />
                 <View>
-                    <Text style = {styles.Name}>Oshadi Madara</Text>
-                    <Text style = {styles.email} >oshadimadara123@gmail.com</Text>
+                    <Text style = {styles.Name}>{profileDetails.name}</Text>
+                    <Text style = {styles.email} >{profileDetails.email}</Text>
                 </View>
                 <View>
                     <TouchableOpacity>
@@ -122,7 +125,7 @@ export default function Settings(){
                 <SettingSection
                     iconName="dot-circle-o"
                     settingName="Help & Support"
-                    navigatePage="NotificationsPage"
+                    navigatePage=""
                 
                 />
                 <SettingSection
@@ -168,6 +171,7 @@ const styles =StyleSheet.create({
    Name:{
        fontFamily:"Inter",
        fontSize:30,
+       width:Dimensions.get("window").width/1.75,
        fontWeight:"bold",
        color:"rgba(166, 138, 103, 1)"
    },
@@ -175,9 +179,11 @@ const styles =StyleSheet.create({
         fontFamily:"Inter",
         fontSize:14,
         fontWeight:"700",
-        color:"rgba(166, 138, 103, 0.7)"
+        width:Dimensions.get("window").width/1.70,
+        color:"rgba(166, 138, 103, 0.7)",
+      
     },
-    imageBox:{
+    imageBox:{  
         flexDirection:"row",
         justifyContent:"space-evenly",
         alignItems:"center",

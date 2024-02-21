@@ -25,7 +25,7 @@ export default function App() {
                             options={{animation:'slide_from_right'}}
                           />
                         <Stack.Screen
-                            name="addPage"
+                            name="AddTask"
                             component={AddTask}
                             options={{animation:'slide_from_right'}}
                           />

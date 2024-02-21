@@ -6,12 +6,22 @@ import { SelectList } from 'react-native-dropdown-select-list'
 import ToggleSwitch from 'toggle-switch-react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from "expo-font";
+import {AppLoading} from "expo";
+import { useNavigation } from '@react-navigation/native';
+
 
 export default function AddTask() {
+    
+
+
 
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
-    })
+    });
+    if (!fontsLoaded) {
+        return AppLoading;
+      }    
+    
     const [date, setDate] = useState(new Date());
     const [Starttime, setStartTime] = useState(new Date());
     const [Endtime, setEndTime] = useState(new Date());
@@ -31,6 +41,22 @@ export default function AddTask() {
         {key:'6', value:'Diary Products'},
         {key:'7', value:'Drinks'},
     ]
+
+    // saving the task 
+    function saveTask({title,description,date,startTime,endTime,category,reminderTime,isReminderOn}){
+
+        const task = {
+            title: title,
+            description: description,
+            date: date,
+            startTime: startTime,
+            endTime: endTime,   
+            category: category,
+            reminderTime: reminderTime,
+            isReminderOn: isReminderOn
+        }
+
+    }
 
     function setSelected(val){
         setCategory(val)
@@ -103,6 +129,13 @@ export default function AddTask() {
         console.log("save")
     }
 
+    //back button
+    const navigation = useNavigation();
+    function GoBack(){
+           navigation.goBack();
+    }
+
+
     // dropdown and scrollview issue handler
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -115,7 +148,7 @@ export default function AddTask() {
         >
             <StatusBar/>
             <View style={styles.topBar}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={GoBack}>
                     <FontAwesome name="chevron-left" size={24} color="#8F816F" />
                 </TouchableOpacity>
                 <Text style={{ color: "#8F816F", fontSize: 18, fontWeight: "bold" ,fontFamily:"Inter" }}>Add Task</Text>

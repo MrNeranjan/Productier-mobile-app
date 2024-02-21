@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import ToggleSwitch from 'toggle-switch-react-native'
 import { useFonts } from "expo-font";
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function NotificationsPage() {
@@ -24,6 +25,11 @@ export default function NotificationsPage() {
         setVibration(!VibrationEnabled);
         
     }
+    // go back 
+    const navigation = useNavigation();
+    function GoBack(){
+        navigation.goBack();
+    }
 
 
 
@@ -37,7 +43,7 @@ export default function NotificationsPage() {
     >
         <StatusBar/>
         <View style={styles.topBar}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={GoBack}>
                 <FontAwesome name="chevron-left" size={24} color="#8F816F" />
             </TouchableOpacity>
             <Text style={{ color: "#8F816F", fontSize: 18, fontWeight: "bold" ,fontFamily:"Inter" }}>Notifications</Text>

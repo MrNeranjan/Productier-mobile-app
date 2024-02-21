@@ -1,8 +1,10 @@
 import { View , Text, StatusBar, ScrollView, Dimensions, SafeAreaView,StyleSheet} from "react-native";
 import {Header,SearchBox,TaskList,TaskComponent} from "../components/tabnavigatorComponents"
 import { LinearGradient } from "expo-linear-gradient";
+import { useStore } from "../store/Store";
 
 export default function Task(){
+
 
     // demonstration of the task components
     const taskList =[

@@ -10,9 +10,9 @@ function SortingButton(){
     return (
         <View style ={{flexDirection:"row-reverse"}}>
             <View style ={styles.sortbutton}>
-                <Text style ={{fontSize:18,fontFamily:"Inter",fontWeight:"900",color:"rgba(166, 138, 103, 1)"}}>Sort</Text>
+                <Text style ={{fontSize:18,fontFamily:"Inter",fontWeight:"900",color:"rgba(166, 138, 103, 1)",padding:2}}>Filter</Text>
                 <TouchableOpacity>
-                    <FontAwesome name="sort" size={27} color="#AAA932" marginLeft={10}/>
+                    <FontAwesome name="filter" size={24} color="#AAA932" marginLeft={10}/>
                 </TouchableOpacity>
             </View>
         </View>
@@ -49,6 +49,7 @@ function NotificationComponent({notification,time,date}){
 
 
 export default function Notifications(){
+    
 
     // example of the notifications
 
@@ -139,7 +140,6 @@ const styles =StyleSheet.create({
         marginRight:20,
         backgroundColor:"rgba(57, 54, 54,0.7)",
         padding:10,
-        width:80,
         borderRadius:15,
         marginTop:16,
         marginBottom:5
