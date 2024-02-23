@@ -1,19 +1,25 @@
 import React,{useState,useRef,useEffect} from "react";
 import { View , Text, StatusBar, ScrollView, Dimensions, SafeAreaView,StyleSheet,TextInput,Alert, TouchableOpacity} from "react-native";
-import {Header,SearchBox,TaskList,TaskComponent} from "../components/tabnavigatorComponents";
+import {Header} from "../components/tabnavigatorComponents";
 import CircularProgress, { ProgressRef } from 'react-native-circular-progress-indicator';
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 
 export default function Analysis(){
+
+        const progressRef = useRef(null);
+        const [isReset, setIsReset] = useState(false);
+        const [isPaused, setIsPaused] = useState(false);
+        const [duration, setDuration] = useState(0);
+        const [totalTime,setTotalTime] =useState(0)
+        const [Minutes, setMinutes] = useState(0);
+        const [hours, setHours] = useState(0);
+        const [days, setDays] = useState(0);
+
         const [fontsLoaded] = useFonts({
             "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
         })
-        //reminders
-        const [totalTime,setTotalTime] =useState(0)
-        const [Minutes,setMinutes]= useState(0)
-        const [hours,setHours]= useState(0)
-        const [days,setDays]= useState(0)
+
     
         // handling the reminder inputs
         function MinutesHandler(Minutes){
@@ -28,28 +34,38 @@ export default function Analysis(){
         }
 
         // Update TotalTime whenever input values change
+
+
         useEffect(() => {
             const totalTime = (Minutes * 60) + (hours * 3600) + (days * 3600 * 24);
             setTotalTime(totalTime);
+            setDuration(totalTime * 1000);
         }, [Minutes, hours, days]);
-
-
-        //handling the animation of the graph 
-        const progressRef = useRef(null);
         // to pause animation
 
         function PushHandler(){
             progressRef.current.pause();
+            setIsPaused(true);
+            
         }
         
         // to play animation
         function PlayHandler(){
             progressRef.current.play();
+            setIsPaused(false);
         }
 
         // to re-play animation
-        function RePlayHandler(){
-            progressRef.current.reAnimate();
+        function RePlayHandler() {
+            if (isReset) {
+                setMinutes(0);
+                setHours(0);
+                setDays(0);
+                setIsReset(false);
+            } else {
+                progressRef.current.reAnimate();
+                setIsReset(true);
+            }
         }
 
     return(
@@ -62,7 +78,7 @@ export default function Analysis(){
             >
             <StatusBar/>
             <Header
-                headerName = "Timer"
+                headerName = "Counter"
             />
             <View style ={{flexDirection:"row",alignItems:"center",justifyContent:"space-evenly",marginTop:40}}>
                 <Text style={{fontSize:30,fontFamily:"Inter",fontWeight:"bold",color:"rgba(57, 54, 54, 1)"}}>Set Timer</Text>
@@ -82,7 +98,7 @@ export default function Analysis(){
                                                             onChangeText={DaysHandler}
                                                             keyboardType='numeric'
                                                             maxLength={3}
-                                                            value={days}
+                                                            value={(days)}
                                                         />
                                                 </View>
                                             
@@ -96,7 +112,7 @@ export default function Analysis(){
                                                     <TextInput
                                                     
                                                            
-                                                            value={hours}
+                                                            value={(hours)}
                                                             placeholder='00'
                                                             style={{alignSelf:"center",padding:2,fontSize:18}}
                                                             onChangeText={(text)=>{
@@ -133,7 +149,7 @@ export default function Analysis(){
                                                         }}
                                                         keyboardType='numeric'
                                                         maxLength={2}
-                                                        value={Minutes}
+                                                        value={(Minutes)}
                                                     />
                                                 </View>
                                         </View>
@@ -156,10 +172,10 @@ export default function Analysis(){
                         progressValueColor={'#ABAA32'}
                         activeStrokeWidth={28}
                         inActiveStrokeWidth={20}
-                        duration={1000*totalTime}
+                        duration={duration}
                         progressFormatter={(value) => {
                             'worklet';
-                            const hours = Math.floor(value / 3600);
+                            const hours = Math.floor(value / 3600); 
                             const minutes = Math.floor((value % 3600) / 60);
                             const seconds = Math.floor(value % 60);
 
@@ -167,19 +183,16 @@ export default function Analysis(){
                             const minutesStr = String(minutes).padStart(2, '0');
                             const secondsStr = String(seconds).padStart(2, '0');
                         
-                            return (totalTime  ? `${hoursStr}:${minutesStr}:${secondsStr}`:"00:00:00");
+                            return (value ?`${hoursStr}:${minutesStr}:${secondsStr}` :"00:00:00");
                         }}
                     />
             </View>
             <View style={{marginBottom:"200%",flexDirection:"row",justifyContent:"space-evenly"} }>
-                <TouchableOpacity onPress={PushHandler} style={styles.button}>
-                    <Text style ={styles.textBottom}>Stop</Text>
-                </TouchableOpacity >
-                <TouchableOpacity onPress={PlayHandler} style={styles.button}>
-                    <Text style ={styles.textBottom}>Resume</Text>
+                <TouchableOpacity onPress={isPaused ? PlayHandler : PushHandler} style={styles.button}>
+                     <Text style ={styles.textBottom}>{isPaused ? 'Resume' : 'Stop'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={RePlayHandler} style={styles.button}>
-                    <Text style ={styles.textBottom}>Re/Start</Text>
+                     <Text style ={styles.textBottom}>{isReset ? 'Clear' : 'Start'}</Text>
                 </TouchableOpacity>
             </View>
             </LinearGradient>

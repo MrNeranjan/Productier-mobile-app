@@ -8,6 +8,7 @@ import AddTask from "./tab navigater screens/AddTakPage.js";
 import ProfilePage from "./setting stack screens/profile.js";
 import ChangePasswordPage from "./setting stack screens/passwordChange.js";
 import NotificationsPage from "./setting stack screens/NotificationHandle.js";
+import TaskList from "./tab navigater screens/taskList.js";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -44,6 +45,13 @@ export default function App() {
                             name="NotificationsPage"
                             component={NotificationsPage}
                             options={{animation:'slide_from_right'}}
+                        />
+
+                        <Stack.Screen
+                            name="TaskList"
+                            component={TaskList}
+                            options={{animation:'slide_from_right'}}
+                        
                         />                          
 
                     </Stack.Navigator>

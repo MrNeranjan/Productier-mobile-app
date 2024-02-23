@@ -9,6 +9,12 @@ import { AppLoading } from "expo";
 import { useNavigation } from '@react-navigation/native';
 
 function CategoryButton({id,categoryName}){
+    const navigation = useNavigation();
+    // delete or rename the category
+    const [renameModalVisible, setRenameModalVisible] = useState(false);
+    const [newName, setNewName] = useState('');
+
+    
 
     // importing categarylist from store
     const CategoryList=  useStore(state=>state.CategoryList)
@@ -16,11 +22,6 @@ function CategoryButton({id,categoryName}){
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
     });
-
-    
-    // delete or rename the category
-    const [renameModalVisible, setRenameModalVisible] = useState(false);
-    const [newName, setNewName] = useState('');
 
     function handleLongPress() {
         Alert.alert(
@@ -70,12 +71,23 @@ function CategoryButton({id,categoryName}){
         setRenameModalVisible(false);
     }
 
+    // routing to the Task List page
+    function handlePress() {
+        // Find the category in the CategoryList
+        const category = CategoryList.find(cat => cat.id === id);
+
+        // Navigate to the TaskList page with the category object
+        navigation.navigate("TaskList", { category: category });
+    }
+
+
 
     return(
         <View>
        
             <TouchableOpacity
                     onLongPress={handleLongPress}
+                    onPress={handlePress}
                 >
                     <LinearGradient
                         colors={['rgba(180,183,33,1)', 'rgba(180,183,33,0.481)', 'rgba(210,211,151,0.30)']}
@@ -126,7 +138,13 @@ function CategoryButton({id,categoryName}){
 }
 
 // search box with categories 
-function SearchBox(){
+function SearchBox({isVisibleADD= true}){
+    // create a new category
+    const [modalVisible, setModalVisible] = useState(false);
+    const [inputText, setInputText] = useState('');
+    // searching box handling 
+    const [searchText, setSearchText] = useState("");
+    
 
     // importing categarylist from store
     const CategoryList=  useStore(state=>state.CategoryList)
@@ -141,8 +159,7 @@ function SearchBox(){
         )
     }
 
-    // searching box handling 
-    const [searchText, setSearchText] = useState("");
+
 
     function SearchTextHandler(text){
             setSearchText(text);
@@ -153,9 +170,6 @@ function SearchBox(){
         category.name.toLowerCase().includes(searchText.toLowerCase())
     );
 
-    // create a new category
-    const [modalVisible, setModalVisible] = useState(false);
-    const [inputText, setInputText] = useState('');
 
     function handleCreateButtonPress() {
 
@@ -219,7 +233,7 @@ function SearchBox(){
                 {/* MAPPING THE CATEGORY LIST */}
                 {filteredCategoryList.map(item => CreateCategory({props: item}))}
 
-                <TouchableOpacity
+                {isVisibleADD ? <TouchableOpacity
                    onPress={openModal}
                  >
                     <LinearGradient
@@ -230,7 +244,7 @@ function SearchBox(){
                     >
                         <FontAwesome name= "plus" size={28} alignSelf ="center" color="rgba(57, 54, 54, 1)"/>
                     </LinearGradient>  
-                </TouchableOpacity>
+                </TouchableOpacity>:null}
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -306,10 +320,14 @@ function CreateDateBar({day,weekday}) {
 
 
 
-// Task list 
-function TaskList({name,displayI}){
+// add task button
+function AddTaskList({name,displayI}){
 
     const navigation = useNavigation();
+    
+    const [fontsLoaded] = useFonts({
+        "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
+    });
 
 
     function AddTaskHandler(){
@@ -317,9 +335,6 @@ function TaskList({name,displayI}){
     }
 
 
-    const [fontsLoaded] = useFonts({
-        "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
-    });
     if (!fontsLoaded) {
         return AppLoading;
     }    
@@ -353,9 +368,7 @@ function TaskList({name,displayI}){
                 :
                 null}
             </View>
-            
-            <ScrollView>
-            </ScrollView>
+
         </View>
     )
 }
@@ -405,7 +418,11 @@ function Header({headerName}){
 };
 
 // Task component for display in task list
-function TaskComponent({taskName,taskTime,taskCategory}){
+function TaskComponent({taskName,taskTime, Description,taskCategory,DATE,isDisplayDate,isDisplayCategory,isDisplayDes}){
+
+    const categaryList = useStore(state=>state.CategoryList);
+     
+    const [isChecked, setChecked] = useState(false);
 
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
@@ -413,8 +430,7 @@ function TaskComponent({taskName,taskTime,taskCategory}){
     if (!fontsLoaded) {
         return AppLoading;
     }  
- 
-    const [isChecked, setChecked] = useState(false);
+
 
 
     return(
@@ -428,26 +444,34 @@ function TaskComponent({taskName,taskTime,taskCategory}){
                     color={isChecked ? "green" : "rgba(57, 54, 54, 1)"}
                     />
             </View>
-
-            <LinearGradient
-                colors={["rgba(161,154,107,1)","rgba(136,127,105,0.7)"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.taskListComponentText}
-            
-            >
-                <View>
-                    <Text style ={{fontFamily:"Inter",fontSize:17,fontWeight:"600"}}>
-                        {taskName}
-                    </Text>
-                    <Text style ={{fontFamily:"Inter",fontSize:12}}>
-                        {taskTime} 
-                    </Text>
-                    <Text style ={{fontFamily:"Inter",fontSize:12}}>
-                        {taskCategory}
-                    </Text>
-                </View>
-            </LinearGradient>
+            <TouchableOpacity>
+                <LinearGradient
+                    colors={["rgba(161,154,107,1)","rgba(136,127,105,0.7)"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.taskListComponentText}
+                
+                >
+                    <View>
+                        <Text style ={{fontFamily:"Inter",fontSize:17,fontWeight:"600"}}>
+                            {taskName}
+                        </Text>
+                        <Text style ={{fontFamily:"Inter",fontSize:12}}>
+                            {taskTime} 
+                        </Text>
+                        {isDisplayCategory ?<Text style ={{fontFamily:"Inter",fontSize:12}}>
+                                            {taskCategory}
+                                            </Text>:null}
+                        {isDisplayDate ?<Text style ={{fontFamily:"Inter",fontSize:12}}>
+                                            {DATE}
+                                        </Text>:null}
+                        {isDisplayDes ?<Text style ={{fontFamily:"Inter",fontSize:12}}>
+                                        
+                                            Description  :{Description}
+                                        </Text>:null}
+                    </View>
+                </LinearGradient> 
+            </TouchableOpacity>              
         </View>
     )
 }
@@ -455,7 +479,7 @@ function TaskComponent({taskName,taskTime,taskCategory}){
 
 
 
-export {Header,SearchBox,TaskList,TaskComponent};
+export {Header,SearchBox,AddTaskList,TaskComponent};
 
 
 const styles = StyleSheet.create(

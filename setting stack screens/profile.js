@@ -9,18 +9,13 @@ import { useNavigation } from '@react-navigation/native';
 import  {useStore}  from  "../store/Store.js";
 
 export default function ProfilePage() {
-    const [fontsLoaded] = useFonts({
-        "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
-    });
-
+    
     // getting personal details from the store
     const personalDetails = useStore((state) => state.PersonalDetails);
-    const list = useStore((state) => state.CategoryList);
-    console.log(list)
 
     // handling the personal details
-     const date = new Date(personalDetails.dateOfBirth);
-    
+    const date = new Date(personalDetails.dateOfBirth);
+
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [name, setName] = useState(personalDetails.name);
@@ -28,6 +23,10 @@ export default function ProfilePage() {
     const [dateBirth, setdateBirth] = useState(date);
     const [phoneNumber, setPhoneNumber] = useState(personalDetails.phoneNumber);
     const [image, setImage] = useState(personalDetails.image);
+    const [fontsLoaded] = useFonts({
+        "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
+    });
+
 
     // HANDLING IMAGE PICKER
     async function pickImage() {

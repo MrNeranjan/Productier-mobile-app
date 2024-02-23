@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Button,Alert, Platform, StatusBar, ScrollView,KeyboardAvoidingView, Dimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useStore } from '../store/Store';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SelectList } from 'react-native-dropdown-select-list'
 import ToggleSwitch from 'toggle-switch-react-native'
@@ -10,9 +11,30 @@ import {AppLoading} from "expo";
 import { useNavigation } from '@react-navigation/native';
 
 
-export default function AddTask() {
-    
 
+export default function AddTask() {
+
+    const categarylist = useStore(state => state.CategoryList);
+    
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [date, setDate] = useState(new Date());
+    const [Starttime, setStartTime] = useState(new Date());
+    const [Endtime, setEndTime] = useState(new Date());
+    const [StartOrEnd,setTime] = useState(["",""])
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [category, setCategory] = useState("")
+    //toggle switch
+    const [onORoff, setonORoff] = useState(false)
+    //reminders
+    const [Minutes,setMinutes]= useState(0)
+    const [hours,setHours]= useState(0)
+    const [days,setDays]= useState(0)
+    // dropdown and scrollview issue handler
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    // console.log(categarylist[1].items  )
 
 
     const [fontsLoaded] = useFonts({
@@ -22,41 +44,76 @@ export default function AddTask() {
         return AppLoading;
       }    
     
-    const [date, setDate] = useState(new Date());
-    const [Starttime, setStartTime] = useState(new Date());
-    const [Endtime, setEndTime] = useState(new Date());
-    const [StartOrEnd,setTime] = useState(["",""])
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
-    const [category, setCategory] = useState("")
 
+    const list =[]
 
-    // this data for illustration purpose
-    const data = [
-        {key:'1', value:'Mobiles', disabled:true},
-        {key:'2', value:'Appliances'},
-        {key:'3', value:'Cameras'},
-        {key:'4', value:'Computers', disabled:true},
-        {key:'5', value:'Vegetables'},
-        {key:'6', value:'Diary Products'},
-        {key:'7', value:'Drinks'},
-    ]
+    // Transform categarylist into the format SelectList expects
+    let data = [];
+    if (categarylist) {
+        data = categarylist.map((category, index) => ({
+            key: category.id.toString(),
+            value: category.name,
+        }));
+    }
+
 
     // saving the task 
-    function saveTask({title,description,date,startTime,endTime,category,reminderTime,isReminderOn}){
+    function SaveTask(){
 
         const task = {
             title: title,
             description: description,
             date: date,
-            startTime: startTime,
-            endTime: endTime,   
+            startTime: Starttime,
+            endTime: Endtime,   
             category: category,
-            reminderTime: reminderTime,
-            isReminderOn: isReminderOn
+            reminderTime: (Minutes*60) + (hours*3600) + (days*24*3600),
+            isReminderOn: onORoff
         }
 
+
+        useStore.setState((state) => {
+            // Find the category in the CategoryList
+            const categoryIndex = state.CategoryList.findIndex(cat => cat.name === category);
+    
+            if (categoryIndex !== -1) {
+                // Add the task to the category
+                const newCategory = {
+                    ...state.CategoryList[categoryIndex],
+                    items: [...state.CategoryList[categoryIndex].items, task]
+                };
+    
+                // Replace the category in the CategoryList
+                const newCategoryList = [
+                    ...state.CategoryList.slice(0, categoryIndex),
+                    newCategory,
+                    ...state.CategoryList.slice(categoryIndex + 1)
+                ];
+    
+                // Return the updated state
+                return { ...state, CategoryList: newCategoryList };
+            }
+    
+            // Return the current state if no category was found
+            return state;
+        });
+
+        category && title  ? (() => {Alert.alert("","Task Saved"); GoBack();})() : Alert.alert("","Please select category and title")
+        
+
     }
+
+    //set title
+    function setTitleHandler(title){
+        setTitle(title)
+    }
+
+    //set description
+    function setDescriptionHandler(description){
+        setDescription(description)
+    }
+
+
 
     function setSelected(val){
         setCategory(val)
@@ -100,10 +157,6 @@ export default function AddTask() {
         setEndTime(currentTime);
     }
 
-    //reminders
-    const [Minutes,setMinutes]= useState(0)
-    const [hours,setHours]= useState(0)
-    const [days,setDays]= useState(0)
 
     // handling the reminder inputs
     function MinutesHandler(Minutes){
@@ -117,17 +170,13 @@ export default function AddTask() {
         setDays(days)
     }
 
-    //toggle switch
-    const [onORoff, setonORoff] = useState(false)
+
     function toggleSwitchHandler(){
         setonORoff(!onORoff)
         
     }
 
-    //save button
-    function saveHandler(){
-        console.log("save")
-    }
+
 
     //back button
     const navigation = useNavigation();
@@ -136,8 +185,7 @@ export default function AddTask() {
     }
 
 
-    // dropdown and scrollview issue handler
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
 
     return (
 
@@ -162,6 +210,7 @@ export default function AddTask() {
                                     Title
                                 </Text>
                                 <TextInput
+                                    onChangeText={setTitleHandler}
                                     placeholder='Write a title'
                                     style={styles.inputBox}
                                 />
@@ -171,6 +220,7 @@ export default function AddTask() {
                                     Description
                                 </Text>
                                 <TextInput
+                                    onChangeText={setDescriptionHandler}
                                     placeholder='Write a Description'
                                     style={styles.inputBox}
                                     multiline={true}
@@ -276,7 +326,7 @@ export default function AddTask() {
                                                             onChangeText={DaysHandler}
                                                             keyboardType='numeric'
                                                             maxLength={3}
-                                                            value={days}
+                                                            // value={days}
                                                         />
                                                 </View>
                                             
@@ -290,7 +340,7 @@ export default function AddTask() {
                                                     <TextInput
                                                     
                                                             editable={onORoff}
-                                                            value={hours}
+                                                            // value={hours}
                                                             placeholder='00'
                                                             style={{alignSelf:"center",padding:2,fontSize:18}}
                                                             onChangeText={(text)=>{
@@ -328,7 +378,7 @@ export default function AddTask() {
                                                         }}
                                                         keyboardType='numeric'
                                                         maxLength={2}
-                                                        value={Minutes}
+                                                        // value={Minutes}
                                                     />
                                                 </View>
                                         </View>
@@ -349,7 +399,7 @@ export default function AddTask() {
 
 
                             <TouchableOpacity
-                                onPress={saveHandler}
+                                onPress={SaveTask}
                             >
                                 <LinearGradient
                                     colors={['rgba(180,183,33,1)', 'rgba(180,183,33,0.481)', 'rgba(210,211,151,0.30)']}
@@ -360,6 +410,7 @@ export default function AddTask() {
                                 <Text style={{color:"#393636",fontFamily:"Inter",fontSize:25,fontWeight:"700",alignSelf:'center',padding:8}}>Save</Text>
                                 </LinearGradient>  
                             </TouchableOpacity>
+                           
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>

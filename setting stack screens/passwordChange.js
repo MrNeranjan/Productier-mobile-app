@@ -7,10 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 export default function ChangePasswordPage({route}) {
-    const [fontsLoaded] = useFonts({
-        "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
-    });
-
+    
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -20,6 +17,10 @@ export default function ChangePasswordPage({route}) {
     const [NewPassVisible,setNewPassVisible] = useState(false);
     const [ConfirmPassVisible,setConfirmPassVisible] = useState(false);
     
+    const [fontsLoaded] = useFonts({
+        "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
+    });
+
 
     // handling the current password input
     function handleCurrentPasswordChange(text) {

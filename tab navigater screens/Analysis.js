@@ -1,9 +1,10 @@
 import { View , Text, StatusBar, ScrollView, Dimensions, SafeAreaView,StyleSheet} from "react-native";
-import {Header,SearchBox,TaskList,TaskComponent} from "../components/tabnavigatorComponents";
+import {Header,SearchBox,AddTaskList,TaskComponent} from "../components/tabnavigatorComponents";
 import CircularProgress from 'react-native-circular-progress-indicator';
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function Analysis(){
+
     return(
         
         <View>
@@ -16,8 +17,10 @@ export default function Analysis(){
             <Header
                 headerName = "Analysis"
             />
-            <SearchBox/>
-            <TaskList
+            <SearchBox
+                isVisibleADD = {false}
+            />
+            <AddTaskList
                 name = "Today's Task Analysis"
                 displayI={false}
             />

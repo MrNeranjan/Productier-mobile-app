@@ -8,14 +8,16 @@ import { useNavigation } from '@react-navigation/native';
 
 
 export default function NotificationsPage() {
-    const [fontsLoaded] = useFonts({
-        "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
-    });
-
     // notification handling 
     const [DailyMotivation, setDailyMotivation] = useState(false);
     const [GeneralNotifications, setGeneralNotifications] = useState(false);
     const [VibrationEnabled,setVibration] =useState(false);
+
+    const navigation = useNavigation();
+
+    const [fontsLoaded] = useFonts({
+        "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
+    });
 
     // vibration handler
     function VibrationHandler(){
@@ -26,7 +28,7 @@ export default function NotificationsPage() {
         
     }
     // go back 
-    const navigation = useNavigation();
+
     function GoBack(){
         navigation.goBack();
     }

@@ -1,34 +1,52 @@
 import { View , Text, StatusBar, ScrollView, Dimensions, SafeAreaView,StyleSheet} from "react-native";
-import {Header,SearchBox,TaskList,TaskComponent} from "../components/tabnavigatorComponents"
+import {Header,SearchBox,AddTaskList,TaskComponent} from "../components/tabnavigatorComponents"
 import { LinearGradient } from "expo-linear-gradient";
 import { useStore } from "../store/Store";
 
+
 export default function Task(){
 
+    const categaryList = useStore(state => state.CategoryList);
 
-    // demonstration of the task components
-    const taskList =[
-        
-        {id:1,taskName :" have a company meeting ",taskTime :"10.00 am - 11.00 am",taskCategory:"Company task"},
-        {id:2,taskName :" have a company meeting ",taskTime :"10.00 am - 11.00 am",taskCategory:"Company task"},
-        {id:3,taskName :" have a company meeting ",taskTime :"10.00 am - 11.00 am",taskCategory:"Company task"},
-        {id:4,taskName :" have a company meeting ",taskTime :"10.00 am - 11.00 am",taskCategory:"Company task"},
-        {id:5,taskName :" have a company meeting ",taskTime :"10.00 am - 11.00 am",taskCategory:"Company task"},
-        {id:6,taskName :" have a company meeting ",taskTime :"10.00 am - 11.00 am",taskCategory:"Company task"},
-        {id:7,taskName :" have a company meeting ",taskTime :"10.00 am - 11.00 am",taskCategory:"Company task"},
-        {id:8,taskName :" have a company meeting ",taskTime :"10.00 am - 11.00 am",taskCategory:"Company task"},
-    ]
+    //checking today's date
+    const today = new Date().toDateString();
+    const totalTasks = categaryList.reduce((tasks, category) => {
+        const todayTasks = category.items.filter(item => {
+            const taskDate = new Date(item.date).toDateString();
+            return taskDate === today;
+        });
+        return tasks.concat(todayTasks);
+    }, []);
+
+
+
 
 
     // Task list mapping 
-
     function TaskCreator(props){
+        
+        function formatTime(date) {
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0'+minutes : minutes;
+            let strTime = hours + ':' + minutes + ' ' + ampm;
+            return strTime;
+        }
+
+        //time formatting
+        const Stime = new Date(props.startTime);
+        const Etime = new Date(props.endTime);
+        const tasktime = formatTime(Stime) + " - " + formatTime(Etime);
 
         return(
             <TaskComponent
-                 taskName = {props.taskName}
-                 taskTime={props.taskTime}
-                 taskCategory={props.taskCategory}
+                 taskName = {props.title}
+                 taskCategory = {props.category}
+                 taskTime = {tasktime}
+                 isDisplayCategory = {true}
             />
         )
     }
@@ -44,12 +62,13 @@ export default function Task(){
                 headerName = "Task"
             />
             <SearchBox/>
-            <TaskList
+            <AddTaskList
                 name = "Today's Task"
                 displayI={true}
+                
             /> 
             <ScrollView>
-                {taskList.map(TaskCreator)}
+                {totalTasks.map(TaskCreator)}
                 <View style ={{marginBottom:"200%"}} ></View>
             </ScrollView>
             </LinearGradient>

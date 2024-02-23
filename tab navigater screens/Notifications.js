@@ -26,6 +26,9 @@ function NotificationComponent({notification,time,date}){
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
     });
+    if (!fontsLoaded) {
+        return null;
+    }
 
     return(
         <TouchableOpacity >

@@ -7,14 +7,14 @@ import { useFonts } from "expo-font";
 import {useStore} from "../store/Store.js";
 
 function SettingSection({iconName,settingName,navigatePage}){
-
+    
+    const navigation = useNavigation();
     
 
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
     });
 
-    const navigation = useNavigation();
 
     function navigate(){
         navigation.navigate(navigatePage);
