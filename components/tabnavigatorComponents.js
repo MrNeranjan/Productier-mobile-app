@@ -418,11 +418,10 @@ function Header({headerName}){
 };
 
 // Task component for display in task list
-function TaskComponent({taskName,taskTime, Description,taskCategory,DATE,isDisplayDate,isDisplayCategory,isDisplayDes}){
+function TaskComponent({taskId,taskName,taskTime, Description,taskCategory,DATE,isDisplayDate,isDisplayCategory,isDisplayDes,isCompleted}){
 
     const categaryList = useStore(state=>state.CategoryList);
-     
-    const [isChecked, setChecked] = useState(false);
+    const [isChecked, setChecked] = useState(isCompleted);
 
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
@@ -431,6 +430,29 @@ function TaskComponent({taskName,taskTime, Description,taskCategory,DATE,isDispl
         return AppLoading;
     }  
 
+    // delete the task
+    function deleteTask(taskId) {
+        
+        const newCategoryList = categaryList.map(category => {
+            const newItems = category.items.filter(item => item.taskId !== taskId);
+            return { ...category, items: newItems };
+        });
+        useStore.setState(state => ({ ...state, CategoryList: newCategoryList }));
+    }
+
+    // complete the task
+    function handleCheck(checked) {
+        setChecked(checked);
+
+        // Update the isCompleted property of the relevant task
+        const newCategoryList = categaryList.map(category => {
+            const newItems = category.items.map(item => 
+                item.taskId === taskId ? { ...item, isCompleted: checked } : item
+            );
+            return { ...category, items: newItems };
+        });
+        useStore.setState(state => ({ ...state, CategoryList: newCategoryList }));
+    }
 
 
     return(
@@ -440,11 +462,22 @@ function TaskComponent({taskName,taskTime, Description,taskCategory,DATE,isDispl
                 <Checkbox
                     style={{marginLeft:15,marginRight:1}}
                     value={isChecked}
-                    onValueChange={setChecked}
+                    onValueChange={handleCheck}
                     color={isChecked ? "green" : "rgba(57, 54, 54, 1)"}
                     />
             </View>
-            <TouchableOpacity>
+
+            <TouchableOpacity onLongPress={() => {
+                Alert.alert(
+                    "Delete Task",
+                    "Are you sure you want to delete this task?",
+                    [
+                        { text: "No", style: "cancel" },
+                        { text: "Yes", onPress: () => deleteTask(taskId)}
+                    ],
+                    { cancelable: true }
+                );
+            }}>
                 <LinearGradient
                     colors={["rgba(161,154,107,1)","rgba(136,127,105,0.7)"]}
                     start={{ x: 0, y: 0 }}
@@ -453,7 +486,7 @@ function TaskComponent({taskName,taskTime, Description,taskCategory,DATE,isDispl
                 
                 >
                     <View>
-                        <Text style ={{fontFamily:"Inter",fontSize:17,fontWeight:"600"}}>
+                        <Text style ={{fontFamily:"Inter",fontSize:17,fontWeight:"bold"}}>
                             {taskName}
                         </Text>
                         <Text style ={{fontFamily:"Inter",fontSize:12}}>
@@ -466,8 +499,8 @@ function TaskComponent({taskName,taskTime, Description,taskCategory,DATE,isDispl
                                             {DATE}
                                         </Text>:null}
                         {isDisplayDes ?<Text style ={{fontFamily:"Inter",fontSize:12}}>
-                                        
-                                            Description  :{Description}
+                                        <Text style ={{fontWeight:"bold"}}>Description :</Text>{Description}
+                                            
                                         </Text>:null}
                     </View>
                 </LinearGradient> 

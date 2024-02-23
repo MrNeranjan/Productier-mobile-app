@@ -24,7 +24,7 @@ export default function Task(){
 
     // Task list mapping 
     function TaskCreator(props){
-        
+
         function formatTime(date) {
             let hours = date.getHours();
             let minutes = date.getMinutes();
@@ -43,6 +43,8 @@ export default function Task(){
 
         return(
             <TaskComponent
+                 taskId = {props.taskId}
+                 isCompleted={props.isCompleted}
                  taskName = {props.title}
                  taskCategory = {props.category}
                  taskTime = {tasktime}

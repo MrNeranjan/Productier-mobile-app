@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from "expo-font";
 import {AppLoading} from "expo";
 import { useNavigation } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
 
 
 
@@ -61,6 +62,8 @@ export default function AddTask() {
     function SaveTask(){
 
         const task = {
+            taskId : uuid.v4(),
+            isCompleted: false,
             title: title,
             description: description,
             date: date,

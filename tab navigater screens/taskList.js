@@ -15,6 +15,7 @@ export default function TaskList({route}) {
 
     const categaryList = useStore(state => state.CategoryList);
     const category = categaryList.find(category => category.name === route.params.category.name);
+    console.log(category);
 
     function formatTime(date) {
         let hours = date.getHours();
@@ -54,6 +55,8 @@ export default function TaskList({route}) {
         return(
             <TaskComponent
                 key = {index}
+                taskId = {item.taskId}
+                isCompleted={item.isCompleted}
                 taskName = {item.title}
                 taskTime = {tasktime}
                 DATE = {taskDate}
