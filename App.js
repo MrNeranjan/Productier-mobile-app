@@ -9,74 +9,116 @@ import ProfilePage from "./setting stack screens/profile.js";
 import ChangePasswordPage from "./setting stack screens/passwordChange.js";
 import NotificationsPage from "./setting stack screens/NotificationHandle.js";
 import TaskList from "./tab navigater screens/taskList.js";
+import GettingStartPage from './getting start stack screens/gettingStartPage.js';
+import RegisterPage from './getting start stack screens/RegisterPage.js';
+import LoginPage from './getting start stack screens/LoginPage.js';
+import ForgetPassPage from './getting start stack screens/ForgetPassPage.js';
 
 const Stack = createNativeStackNavigator();
+
 export default function App() {
 
   const [isRegistered, setIsRegistered] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
-  if (!isRegistered){
+  if(isLogin && isRegistered){
     return (
-             <NavigationContainer>
-                    <Stack.Navigator 
-                        screenOptions={{headerShown:false}}>
-                        <Stack.Screen 
-                            name="Tab" 
-                            component={TabNavigator}
-                            options={{animation:'slide_from_right'}}
-                          />
-                        <Stack.Screen
-                            name="AddTask"
-                            component={AddTask}
-                            options={{animation:'slide_from_right'}}
-                          />
-                        <Stack.Screen
-                            name="ProfilePage"
-                            component={ProfilePage}
-                            options={{animation:'slide_from_right'}}
-                        />
-                        
-                        <Stack.Screen
-                            name="ChangePasswordPage"
-                            component={ChangePasswordPage}
-                            options={{animation:'slide_from_right'}}
-                        />
-                        <Stack.Screen
-                            name="NotificationsPage"
-                            component={NotificationsPage}
-                            options={{animation:'slide_from_right'}}
-                        />
+      <NavigationContainer>
+             <Stack.Navigator 
+                 screenOptions={{headerShown:false}}>
+                 <Stack.Screen 
+                     name="Tab" 
+                     component={TabNavigator}
+                     options={{animation:'slide_from_right'}}
+                   />
+                 <Stack.Screen
+                     name="AddTask"
+                     component={AddTask}
+                     options={{animation:'slide_from_right'}}
+                   />
+                 <Stack.Screen
+                     name="ProfilePage"
+                     component={ProfilePage}
+                     options={{animation:'slide_from_right'}}
+                 />
+                 
+                 <Stack.Screen
+                     name="ChangePasswordPage"
+                     component={ChangePasswordPage}
+                     options={{animation:'slide_from_right'}}
+                 />
+                 <Stack.Screen
+                     name="NotificationsPage"
+                     component={NotificationsPage}
+                     options={{animation:'slide_from_right'}}
+                 />
 
-                        <Stack.Screen
-                            name="TaskList"
-                            component={TaskList}
-                            options={{animation:'slide_from_right'}}
-                        
-                        />                          
+                 <Stack.Screen
+                     name="TaskList"
+                     component={TaskList}
+                     options={{animation:'slide_from_right'}}
+                 
+                 />                          
 
-                    </Stack.Navigator>
+             </Stack.Navigator>
+         </NavigationContainer>
+      );
 
-                    {/* other settings pages should  add  */}
+  }
+  if(isRegistered){
+
+    return (
+        <NavigationContainer>
+            <Stack.Navigator 
+                screenOptions={{headerShown:false}}>
+                <Stack.Screen 
+                    name="LoginPage" 
+                    component={LoginPage}
+                    options={{animation:'slide_from_right'}}
+                />
+                <Stack.Screen
+                    name="ForgetPassPage"
+                    component={ForgetPassPage}
+                    options={{animation:'slide_from_right'}}
+                />
+            </Stack.Navigator>
+
+        </NavigationContainer>
+      
+    )
+
+  }if(!isRegistered){
+    return (
+        <NavigationContainer>
+            <Stack.Navigator 
+                screenOptions={{headerShown:false}}>
+                <Stack.Screen 
+                    name="GettingStartPage" 
+                    component={GettingStartPage}
+                    options={{animation:'slide_from_right'}}
+                />
+                <Stack.Screen
+                    name="RegisterPage"
+                    component={RegisterPage}
+                    options={{animation:'slide_from_right'}}
+                />
+                <Stack.Screen 
+                    name="LoginPage" 
+                    component={LoginPage}
+                    options={{animation:'slide_from_right'}}
+                />
+                <Stack.Screen
+                    name="ForgetPassPage"
+                    component={ForgetPassPage}
+                    options={{animation:'slide_from_right'}}
+                />
                 
-
-                </NavigationContainer>
-    );
-  }else{
-
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <StatusBar style="auto" />
-        
-      </View>
-    );
+            </Stack.Navigator>
+  
+        </NavigationContainer>
+      
+    )
+  
   }
 
 }
-
-const styles = StyleSheet.create({
-  bodyNotRegistered:{        
-    width: Dimensions.get("window").width,
-    height: "100%"
-},
-});

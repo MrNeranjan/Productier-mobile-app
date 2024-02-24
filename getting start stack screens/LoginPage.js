@@ -130,8 +130,8 @@ const styles = StyleSheet.create({
         height: "100%"
     },
     gradient: {
-        position: 'absolute',
-        top: Dimensions.get("window").height/3-150,
+        // position: 'absolute',
+        top: Dimensions.get("window").height/3-100,
         borderRadius: 30,
         width: '94%', 
         alignSelf: 'center',
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: "Inter",
         fontStyle: "normal",
         fontWeight: "400",

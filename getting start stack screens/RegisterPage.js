@@ -7,20 +7,25 @@ import { LinearGradient } from "expo-linear-gradient";
 
 
 export default function RegisterPage(){
-    
+
+
+    const [first_name, setFirst_name] = useState('');
+    const [last_name, setLast_name] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, SetPassword] = useState('');
+
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
     })
 
     // get email
-    const [email, setEmail] = useState('');
+
     function emailHandler(email){
         setEmail(email);
         console.log(email);
     }
 
     // get password
-    const [password, SetPassword] = useState('');
     function passwordHandler(password){
         SetPassword(password);
         console.log(password);
@@ -36,6 +41,18 @@ export default function RegisterPage(){
     // handler for google login
     function GoogleRegisterHandler(){
         console.log("google register");
+    }
+
+    //first name handler
+    function FirstNameHandler(first_name){
+        setFirst_name(first_name);
+        console.log(first_name);
+    }
+
+    //last name handler
+    function LastNameHandler(last_name){
+        setLast_name(last_name);
+        console.log(last_name);
     }
 
     return(
@@ -57,6 +74,20 @@ export default function RegisterPage(){
                     >
                     </Image>
                     <View >
+                        <TextInput
+                            style={styles.inputBox}
+                            onChangeText={FirstNameHandler}
+                            value={first_name}
+                            placeholder={'first name'}
+                            
+                        />
+                        <TextInput
+                            style={styles.inputBox}
+                            onChangeText={LastNameHandler}
+                            value={last_name}
+                            placeholder={'last name'}
+                            
+                        />
                         <TextInput
                             style={styles.inputBox}
                             onChangeText={emailHandler}
@@ -146,7 +177,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: "Inter",
         fontStyle: "normal",
         fontWeight: "400",
