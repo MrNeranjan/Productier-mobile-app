@@ -6,23 +6,16 @@ import personalDetails from "../Deatails/personal";
 
 
 
-export const  useStore= create(
-    
-        
-        persist((set,get)=>({
-
-            CategoryList : [] ,
-            PersonalDetails : personalDetails,
-            Timer : 0,
-
-            
-        }),
-        {
-            name: "Note Keeper data",
-            storage: createJSONStorage(()=>AsyncStorage)
-        }
-        
-        )
-        
-)
-
+export const useStore = create(
+    persist(
+      (set, get) => ({
+        CategoryList: [],
+        PersonalDetails: personalDetails,
+        setPersonalDetails: (details) => set((state) => ({ ...state, PersonalDetails: { ...state.PersonalDetails, ...details } })),
+      }),
+      {
+        name: "Note Keeper data",
+        storage: createJSONStorage(() => AsyncStorage),
+      }
+    )
+  );

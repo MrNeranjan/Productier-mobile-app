@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {NavigationContainer} from "@react-navigation/native";
 import { StyleSheet, Text, View ,ImageBackground,Dimensions, KeyboardAvoidingView, ScrollView} from 'react-native';
@@ -13,13 +13,20 @@ import GettingStartPage from './getting start stack screens/gettingStartPage.js'
 import RegisterPage from './getting start stack screens/RegisterPage.js';
 import LoginPage from './getting start stack screens/LoginPage.js';
 import ForgetPassPage from './getting start stack screens/ForgetPassPage.js';
+import {useStore} from "./store/Store.js";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  
+  const personalDetails = useStore(state => state.PersonalDetails);
+  const [isRegistered, setIsRegistered] = useState(personalDetails.IsRegistered);
+  const [isLogin, setIsLogin] = useState(personalDetails.IsLogin);
 
-  const [isRegistered, setIsRegistered] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    setIsRegistered(personalDetails.IsRegistered);
+    setIsLogin(personalDetails.IsLogin);
+  }, [personalDetails]);
 
   if(isLogin && isRegistered){
     return (
@@ -66,7 +73,6 @@ export default function App() {
 
   }
   if(isRegistered){
-
     return (
         <NavigationContainer>
             <Stack.Navigator 
@@ -81,6 +87,39 @@ export default function App() {
                     component={ForgetPassPage}
                     options={{animation:'slide_from_right'}}
                 />
+                <Stack.Screen 
+                     name="Tab" 
+                     component={TabNavigator}
+                     options={{animation:'slide_from_right'}}
+                />
+                                 <Stack.Screen
+                     name="AddTask"
+                     component={AddTask}
+                     options={{animation:'slide_from_right'}}
+                   />
+                 <Stack.Screen
+                     name="ProfilePage"
+                     component={ProfilePage}
+                     options={{animation:'slide_from_right'}}
+                 />
+                 
+                 <Stack.Screen
+                     name="ChangePasswordPage"
+                     component={ChangePasswordPage}
+                     options={{animation:'slide_from_right'}}
+                 />
+                 <Stack.Screen
+                     name="NotificationsPage"
+                     component={NotificationsPage}
+                     options={{animation:'slide_from_right'}}
+                 />
+
+                 <Stack.Screen
+                     name="TaskList"
+                     component={TaskList}
+                     options={{animation:'slide_from_right'}}
+                 
+                 /> 
             </Stack.Navigator>
 
         </NavigationContainer>
@@ -112,6 +151,39 @@ export default function App() {
                     component={ForgetPassPage}
                     options={{animation:'slide_from_right'}}
                 />
+                <Stack.Screen 
+                     name="Tab" 
+                     component={TabNavigator}
+                     options={{animation:'slide_from_right'}}
+                />
+                                 <Stack.Screen
+                     name="AddTask"
+                     component={AddTask}
+                     options={{animation:'slide_from_right'}}
+                   />
+                 <Stack.Screen
+                     name="ProfilePage"
+                     component={ProfilePage}
+                     options={{animation:'slide_from_right'}}
+                 />
+                 
+                 <Stack.Screen
+                     name="ChangePasswordPage"
+                     component={ChangePasswordPage}
+                     options={{animation:'slide_from_right'}}
+                 />
+                 <Stack.Screen
+                     name="NotificationsPage"
+                     component={NotificationsPage}
+                     options={{animation:'slide_from_right'}}
+                 />
+
+                 <Stack.Screen
+                     name="TaskList"
+                     component={TaskList}
+                     options={{animation:'slide_from_right'}}
+                 
+                 /> 
                 
             </Stack.Navigator>
   

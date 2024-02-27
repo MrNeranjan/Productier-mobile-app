@@ -5,10 +5,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from '@react-navigation/native';  
 import { useFonts } from "expo-font";
 import {useStore} from "../store/Store.js";
+import { useState } from "react";
 
 function SettingSection({iconName,settingName,navigatePage}){
     
     const navigation = useNavigation();
+
     
 
     const [fontsLoaded] = useFonts({
@@ -43,11 +45,18 @@ function SettingSection({iconName,settingName,navigatePage}){
 };
 
 export default function Settings(){
+    const [loginStatus, setLoginStatus] = useState(false);
     const profileDetails = useStore((state) => state.PersonalDetails);
+    const setPersonalDetails = useStore((state) => state.setPersonalDetails);
     const navigation = useNavigation();
 
     function ProfilePage(){
         navigation.navigate("ProfilePage");
+    }
+
+    // LOGOUT FUNCTION
+    function Logout(){
+        setPersonalDetails({ IsLogin: loginStatus });
     }
 
 
@@ -72,7 +81,7 @@ export default function Settings(){
                     <Text style = {styles.email} >{profileDetails.email}</Text>
                 </View>
                 <View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={Logout}>
                         <FontAwesome name = "sign-out" size={24} color="rgba(166, 138, 103, 1)" marginBottom={30} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={ProfilePage}>

@@ -1,14 +1,27 @@
 import React,{useState} from 'react';
-import {Text, View,Image, StyleSheet, TouchableOpacity,ImageBackground,StatusBar,Dimensions, TextInput, KeyboardAvoidingView} from 'react-native';
+import {Text, View,Image, StyleSheet, TouchableOpacity,ImageBackground,StatusBar,Dimensions, TextInput, KeyboardAvoidingView, Alert} from 'react-native';
 import {useFonts} from "expo-font";
+import {useStore} from "../store/Store";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 
 export default function LoginPage(){
 
     const navigation = useNavigation();
-    
+    const [loginStatus, setLoginSt] = useState(true);
+    const setPersonalDetails = useStore((state) => state.setPersonalDetails);
+       
+    //this is for set for the store status of the whether login or not 
+    function setLoginStatus(){
+        try {
+            setPersonalDetails({ IsLogin: loginStatus });
+          } catch (error) {
+            console.error('Error in sayingRegister:', error);
+          }
+    }
+
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
     })
@@ -21,9 +34,31 @@ export default function LoginPage(){
 
 
     // handler for login button
-    function LoginHandler(){
-        console.log("login");
+    async function LoginHandler(){
+        try {
+            
+            const response = await axios.get('http://10.10.13.6:3000/checkUser', {
+                params: {
+                    email: email,
+                    password: password
+                }
+            });
+    
+            if (response.data.exists) {
+                setLoginStatus();
+                Alert.alert("Login Successful", "Welcome to NoteKeeper")
+                console.log("User exists");
+                navigation.navigate("Tab");
+            } else {
+                Alert.alert("Login Failed", "User does not exist")
+                console.log("User does not exist"); 
+            }
+        } catch (error) {
+            console.error('Error checking user existence:', error);
+        }
     }
+
+
 
     // handler for forget password
     function forgetPasswordHandler(){

@@ -5,7 +5,9 @@ const personalDetails=
         email : "example@gmail.com",
         phoneNumber : "0712345678",
         dateOfBirth : new Date(),
-        image : null
+        image : null,
+        IsRegistered : false,
+        IsLogin : false,
     }
 
     export default personalDetails;
