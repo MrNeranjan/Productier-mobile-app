@@ -62,6 +62,14 @@ export default function RegisterPage() {
     setLast_name(last_name);
   }
 
+  // Email save to store 
+  function saveEmail(){
+    try {
+      setPersonalDetails({email : email})
+    } catch (error) {
+      console.error('Error in sayingRegister:', error);
+    }
+  }
   
   
 // function to set the register status to true 
@@ -94,12 +102,13 @@ function Encrypter(password){
       password: hashedPassword,
     };
   
-    axios.post("http://10.10.13.6:3000/UserRegister", newUser)
+    axios.post("http://192.168.209.92:3000/UserRegister", newUser)
       .then((response) => {
         Alert.alert(
           "Registration Successful",
           "You have been registered successfully"
         );
+        saveEmail();
         sayingRegister();
         setFirst_name("");
         setLast_name("");

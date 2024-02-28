@@ -4,10 +4,14 @@ import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from "expo-font";
 import { useNavigation } from '@react-navigation/native';
+import {useStore} from "../store/Store.js";
+import axios from 'axios';
 
 
 export default function ChangePasswordPage({route}) {
     
+    const personalDetails = useStore(state => state.PersonalDetails);
+    const [regEmail, setRegEmail] = useState(personalDetails.email);
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -42,6 +46,33 @@ export default function ChangePasswordPage({route}) {
     function GoBack(){
         navigation.goBack();
     }
+
+    // Function to request password change
+    async function changePassword(email, oldPassword, newPassword) {
+        try {
+        const response = await axios.post('http://192.168.209.92:3000/changePassword', {
+            email: regEmail,
+            oldPassword: currentPassword,
+            newPassword: newPassword,
+        });
+    
+            Alert.alert("", "Password changed successfully");
+            GoBack();
+        } catch (error) {
+            Alert.alert('Error:', error.response ? error.response.data.message : error.message);
+        }
+        
+    }
+    
+    // Function to handle the password change
+    function handlePasswordChange() {
+        if (newPassword === confirmPassword) {
+            changePassword(regEmail, currentPassword, newPassword);
+        } else {
+            alert('Passwords do not match');
+        }
+    }
+
 
     return (
         <LinearGradient
@@ -111,7 +142,7 @@ export default function ChangePasswordPage({route}) {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handlePasswordChange}>
 
                         <LinearGradient
                             colors={['rgba(180,183,33,1)', 'rgba(180,183,33,0.481)', 'rgba(210,211,151,0.30)']}

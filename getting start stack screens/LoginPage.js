@@ -37,7 +37,7 @@ export default function LoginPage(){
     async function LoginHandler(){
         try {
             
-            const response = await axios.get('http://10.10.13.6:3000/checkUser', {
+            const response = await axios.get('http://192.168.209.92:3000/checkUser', {
                 params: {
                     email: email,
                     password: password

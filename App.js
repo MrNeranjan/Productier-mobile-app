@@ -23,6 +23,7 @@ export default function App() {
   const [isRegistered, setIsRegistered] = useState(personalDetails.IsRegistered);
   const [isLogin, setIsLogin] = useState(personalDetails.IsLogin);
 
+
   useEffect(() => {
     setIsRegistered(personalDetails.IsRegistered);
     setIsLogin(personalDetails.IsLogin);
@@ -65,7 +66,17 @@ export default function App() {
                      component={TaskList}
                      options={{animation:'slide_from_right'}}
                  
-                 />                          
+                 /> 
+                <Stack.Screen 
+                    name="LoginPage" 
+                    component={LoginPage}
+                    options={{animation:'slide_from_right'}}
+                />
+                <Stack.Screen
+                    name="ForgetPassPage"
+                    component={ForgetPassPage}
+                    options={{animation:'slide_from_right'}}
+                />                       
 
              </Stack.Navigator>
          </NavigationContainer>

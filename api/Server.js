@@ -99,3 +99,39 @@ app.get('/checkUser', async (req, res) => {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+
+// change password endpoint
+app.post("/changePassword", async(req, res) => {
+  const {email, oldPassword, newPassword} = req.body;
+  try {
+    // Query the database for the user
+    const user = await User.findOne({ email: email });
+
+    // Check if the old password is correct
+    bcrypt.compare(oldPassword, user.password, (err, isMatch) => {
+      if (err) {
+        return res.status(500).json({ message: "Error comparing passwords", error: err });
+      }
+
+      if (!isMatch) {
+        return res.status(400).json({ message: "Incorrect password" });
+      }
+
+      // Hash the new password and update the user
+      bcrypt.hash(newPassword, 10, async (err, hashedPassword) => {
+        if (err) {
+          return res.status(500).json({ message: "Error hashing password", error: err });
+        }
+
+        user.password = hashedPassword;
+        await user.save();
+
+        res.status(200).json({ message: "Password changed successfully" });
+      });
+    });
+  } catch (error) {
+    console.error(error); // Log the error to the console
+    res.status(500).json({ message: "Error changing password", error: error.toString() });
+  }
+});

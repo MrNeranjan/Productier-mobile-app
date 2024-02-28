@@ -57,6 +57,7 @@ export default function Settings(){
     // LOGOUT FUNCTION
     function Logout(){
         setPersonalDetails({ IsLogin: loginStatus });
+        navigation.navigate("LoginPage")
     }
 
 

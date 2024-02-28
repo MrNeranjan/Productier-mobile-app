@@ -150,15 +150,23 @@ export default function AddTask() {
 
     const onChangeStartTime = (event, selectedTime) => {
         const currentTime = selectedTime || Starttime;
+        if (currentTime < new Date()) {
+          // If the selected time is in the past, don't update the state
+          return;
+        }
         setShow(Platform.OS === 'ios');
-        setStartTime(selectedTime);
-    }
+        setStartTime(currentTime);
+      }
 
-    const onChangeEndTime = (event, selectedTime) => {
+      const onChangeEndTime = (event, selectedTime) => {
         const currentTime = selectedTime || Endtime;
+        if (currentTime < Starttime) {
+          // If the selected end time is earlier than the start time, don't update the state
+          return;
+        }
         setShow(Platform.OS === 'ios');
         setEndTime(currentTime);
-    }
+      }
 
 
     // handling the reminder inputs
@@ -254,6 +262,7 @@ export default function AddTask() {
                                         mode={mode}
                                         is24Hour={false}
                                         display="default"
+                                        minimumDate={new Date()}
                                         onChange={mode === 'date' ? onChange : (mode === 'time' && StartOrEnd[0]=== "Starttime" ? onChangeStartTime : onChangeEndTime)}
                                     />
                                 )}

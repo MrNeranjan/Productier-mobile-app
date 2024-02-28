@@ -157,6 +157,7 @@ export default function ProfilePage() {
                                 onChangeText={handleEmailChange}
                                 value = {email}
                                 style={styles.inputBox}
+                                editable = {false}
                             />
                         </View>
                         <View>
