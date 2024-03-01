@@ -100,7 +100,6 @@ app.get('/checkUser', async (req, res) => {
   }
 });
 
-
 // change password endpoint
 app.post("/changePassword", async(req, res) => {
   const {email, oldPassword, newPassword} = req.body;
@@ -133,5 +132,29 @@ app.post("/changePassword", async(req, res) => {
   } catch (error) {
     console.error(error); // Log the error to the console
     res.status(500).json({ message: "Error changing password", error: error.toString() });
+  }
+});
+
+
+// fetching the motivations 
+const Motivation = require("./schemas/motivation");
+app.get('/getMotivation', async (req, res) => {
+
+  const {motiID} = req.query;
+
+  try {
+    const motivation = await Motivation.findOne({ motiID: motiID });
+    console.log(motiID);
+
+    if (motivation) {
+      res.json(motivation);
+      console.log("Motivation fetched");
+    } else {
+      res.status(404).json({ message: 'Motivation not found' });
+      console.log("Motivation not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });

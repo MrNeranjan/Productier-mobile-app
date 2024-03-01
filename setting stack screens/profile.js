@@ -92,7 +92,10 @@ export default function ProfilePage() {
             dateOfBirth: dateBirth ? dateBirth : new Date(),
             image: image
           }
+          
         }));
+        Alert.alert("","Details Saved Successfully");
+        GoBack();
       }
 
 
@@ -102,8 +105,6 @@ export default function ProfilePage() {
     function GoBack() {
         navigation.goBack();
     }
-
-
 
 
 

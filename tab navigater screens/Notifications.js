@@ -3,6 +3,8 @@ import {Header} from "../components/tabnavigatorComponents";
 import {FontAwesome} from '@expo/vector-icons';
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
+import { useStore } from "../store/Store";
+import { useEffect } from "react";
 
 
 //sorting the notifications
@@ -10,10 +12,7 @@ function SortingButton(){
     return (
         <View style ={{flexDirection:"row-reverse"}}>
             <View style ={styles.sortbutton}>
-                <Text style ={{fontSize:18,fontFamily:"Inter",fontWeight:"900",color:"rgba(166, 138, 103, 1)",padding:2}}>Filter</Text>
-                <TouchableOpacity>
-                    <FontAwesome name="filter" size={24} color="#AAA932" marginLeft={10}/>
-                </TouchableOpacity>
+                <Text style ={{fontSize:18,fontFamily:"Inter",fontWeight:"900",color:"rgba(166, 138, 103, 1)",padding:2}}>Motivations</Text>
             </View>
         </View>
 
@@ -22,7 +21,7 @@ function SortingButton(){
 }
 
  // notification component 
-function NotificationComponent({notification,time,date}){
+function NotificationComponent({notification,Author}){
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
     });
@@ -40,8 +39,8 @@ function NotificationComponent({notification,time,date}){
                 >
                     <FontAwesome name="circle" size={10} color="#AAA932" />
                     <View style={{marginLeft:10,paddingRight:15}}>
-                        <Text style ={styles.notification}>you have successfully completed</Text>
-                        <Text style ={styles.time}>10.00 am</Text>
+                        <Text style ={styles.notification}>"{notification}"</Text>
+                        <Text style ={styles.time}>~ {Author} ~</Text>
                     </View>
                 </LinearGradient>
         </TouchableOpacity>
@@ -53,28 +52,14 @@ function NotificationComponent({notification,time,date}){
 
 export default function Notifications(){
     
+    const motivations = useStore((state) => state.MotivationList);
 
-    // example of the notifications
-
-    const notifications =[
-        {id:1,notification:"you have successfully completed",time:"10.00 am",date:"2021-09-20"},
-        {id:1,notification:"you have successfully completed",time:"10.00 am",date:"2021-09-20"},
-        {id:1,notification:"you have successfully completed",time:"10.00 am",date:"2021-09-20"},
-        {id:1,notification:"you have successfully completed",time:"10.00 am",date:"2021-09-20"},
-        {id:1,notification:"you have successfully completed",time:"10.00 am",date:"2021-09-20"},
-        {id:1,notification:"you have successfully completed",time:"10.00 am",date:"2021-09-20"},
-        {id:1,notification:"you have successfully completed",time:"10.00 am",date:"2021-09-20"},
-        {id:1,notification:"you have successfully completed",time:"10.00 am",date:"2021-09-20"},
-        {id:1,notification:"you have successfully completed",time:"10.00 am",date:"2021-09-20"},
-        {id:1,notification:"you have successfully completed",time:"10.00 am",date:"2021-09-20"},
-    ]
     // notification component mapping
     function NotificationCreator(props){
         return(
             <NotificationComponent
-                notification = {props.notification}
-                time = {props.time}
-                date = {props.date}
+                notification = {props.Body}
+                Author = {props.Author}
             />
         )
     }
@@ -94,10 +79,10 @@ export default function Notifications(){
             />
             <SortingButton/>
             <ScrollView>
-                {notifications.map(NotificationCreator)}
-                <View style ={{marginBottom:"100%"}} ></View>
+                {motivations.map(NotificationCreator)}
+                <View style ={{marginBottom:"200%"}} ></View>
             </ScrollView> 
-
+           
 
 
         </LinearGradient>
@@ -124,7 +109,8 @@ const styles =StyleSheet.create({
     time:{
         fontFamily:"Inter",
         fontSize:14,
-        color:"#F4E6E6"
+        color:"#F4E6E6",
+        marginLeft:Dimensions.get("window").width/2-20
     },
     notiComponent:{
         flexDirection:"row",

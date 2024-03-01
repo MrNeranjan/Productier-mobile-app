@@ -50,7 +50,7 @@ export default function ChangePasswordPage({route}) {
     // Function to request password change
     async function changePassword(email, oldPassword, newPassword) {
         try {
-        const response = await axios.post('http://192.168.209.92:3000/changePassword', {
+        const response = await axios.post('http://192.168.8.178:3000/changePassword', {
             email: regEmail,
             oldPassword: currentPassword,
             newPassword: newPassword,

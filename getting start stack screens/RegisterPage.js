@@ -102,7 +102,7 @@ function Encrypter(password){
       password: hashedPassword,
     };
   
-    axios.post("http://192.168.209.92:3000/UserRegister", newUser)
+    axios.post("http://192.168.8.178:3000/UserRegister", newUser)
       .then((response) => {
         Alert.alert(
           "Registration Successful",

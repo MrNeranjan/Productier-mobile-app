@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {NavigationContainer} from "@react-navigation/native";
-import { StyleSheet, Text, View ,ImageBackground,Dimensions, KeyboardAvoidingView, ScrollView} from 'react-native';
+import { StyleSheet, Text, View ,ImageBackground,Dimensions, KeyboardAvoidingView, ScrollView,Button} from 'react-native';
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator/TabNavigator.js";
 import AddTask from "./tab navigater screens/AddTakPage.js";
@@ -14,6 +14,10 @@ import RegisterPage from './getting start stack screens/RegisterPage.js';
 import LoginPage from './getting start stack screens/LoginPage.js';
 import ForgetPassPage from './getting start stack screens/ForgetPassPage.js';
 import {useStore} from "./store/Store.js";
+
+
+// checking notifications 
+import Notification from './Notifications/Notifications.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,8 +32,8 @@ export default function App() {
     setIsRegistered(personalDetails.IsRegistered);
     setIsLogin(personalDetails.IsLogin);
   }, [personalDetails]);
-
-  if(isLogin && isRegistered){
+ 
+  if(isLogin && isRegistered){         //isLogin && isRegistered
     return (
       <NavigationContainer>
              <Stack.Navigator 
@@ -79,11 +83,13 @@ export default function App() {
                 />                       
 
              </Stack.Navigator>
+            <Notification/>
          </NavigationContainer>
+         
       );
 
   }
-  if(isRegistered){
+  if(isRegistered){    //isRegistered      
     return (
         <NavigationContainer>
             <Stack.Navigator 
@@ -132,12 +138,12 @@ export default function App() {
                  
                  /> 
             </Stack.Navigator>
-
+            <Notification/>
         </NavigationContainer>
       
     )
 
-  }if(!isRegistered){
+  }if(!isRegistered){           
     return (
         <NavigationContainer>
             <Stack.Navigator 
@@ -197,11 +203,9 @@ export default function App() {
                  /> 
                 
             </Stack.Navigator>
-  
+            <Notification/>
         </NavigationContainer>
       
     )
-  
   }
-
 }

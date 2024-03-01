@@ -37,7 +37,10 @@
     "react-native-uuid": "^2.0.1",
     "toggle-switch-react-native": "^3.3.0",
     "uuid": "^9.0.1",
-    "zustand": "^4.5.1"
+    "zustand": "^4.5.1",
+    "expo-notifications": "~0.27.6",
+    "expo-device": "~5.9.3",
+    "@react-native-community/netinfo": "11.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
