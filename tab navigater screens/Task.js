@@ -1,7 +1,9 @@
+import React,{ useEffect } from "react";
 import { View , Text, StatusBar, ScrollView, Dimensions, SafeAreaView,StyleSheet} from "react-native";
 import {Header,SearchBox,AddTaskList,TaskComponent} from "../components/tabnavigatorComponents"
 import { LinearGradient } from "expo-linear-gradient";
 import { useStore } from "../store/Store";
+
 
 
 export default function Task(){
@@ -17,9 +19,6 @@ export default function Task(){
         });
         return tasks.concat(todayTasks);
     }, []);
-
-
-
 
 
     // Task list mapping 
@@ -78,6 +77,3 @@ export default function Task(){
     )
 };
 
-const styles =StyleSheet.create({
-
-})

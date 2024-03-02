@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useFonts } from "expo-font";
 import {useStore} from "../store/Store.js";
 import { useState } from "react";
+import * as MailComposer from 'expo-mail-composer';
 
 function SettingSection({iconName,settingName,navigatePage}){
     
@@ -19,7 +20,18 @@ function SettingSection({iconName,settingName,navigatePage}){
 
 
     function navigate(){
-        navigation.navigate(navigatePage);
+        if (navigatePage === "sendmail" || navigatePage === "help&support"){
+
+            MailComposer.composeAsync({
+                recipients: ["ongoal.devpteam@gmail.com"], // Array of email addresses
+                subject: navigatePage === "sendmail" ? 'Feedback 📝' :"Help & Support 🙌", // Subject of the email
+                body: navigatePage === "sendmail" ? 'Please enter your feedback here...' : "We're here to assist you. How may we help?", // Body of the email
+              })
+
+        }else{
+            navigation.navigate(navigatePage);
+        }
+        
     }
 
 
@@ -135,13 +147,13 @@ export default function Settings(){
                 <SettingSection
                     iconName="dot-circle-o"
                     settingName="Help & Support"
-                    navigatePage=""
+                    navigatePage="help&support"
                 
                 />
                 <SettingSection
                     iconName="dot-circle-o"
                     settingName="Give Feedback"
-                    navigatePage=""
+                    navigatePage="sendmail"
                 
                 />
                 <SettingSection

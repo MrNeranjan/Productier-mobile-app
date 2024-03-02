@@ -17,6 +17,7 @@ export default function TaskList({route}) {
     const category = categaryList.find(category => category.name === route.params.category.name);
     console.log(category);
 
+
     function formatTime(date) {
         let hours = date.getHours();
         let minutes = date.getMinutes();

@@ -55,6 +55,7 @@ export default function Notification() {
   const responseListener = useRef();
   const setMotivationList = useStore((state) => state.setMotivationList);
   const MotivationList = useStore((state) => state.MotivationList);
+  const categoryList = useStore((state) => state.CategoryList);
 
   useEffect(() => {
     fetchMotivation(setMotivationList, MotivationList);
@@ -75,12 +76,17 @@ export default function Notification() {
 
   useEffect(() => {
     scheduleMotivationNotification(MotivationList);
-  }, [MotivationList]); // Added MotivationList as a dependency
+    scheduleNotificationsForCategoryList(categoryList);
+
+  }, [MotivationList,categoryList]); 
 }
 
 
 // Motivation notify function
 export async function scheduleMotivationNotification(MotivationList) {
+
+  await Notifications.cancelAllScheduledNotificationsAsync();
+
   const moti = MotivationList[MotivationList.length -1];
   console.log(moti.motiID)
   console.log(MotivationList);
@@ -99,3 +105,56 @@ export async function scheduleMotivationNotification(MotivationList) {
 
 }
 
+
+// task reminder function
+export async function scheduleTaskNotification(task) {
+  if (task.isReminderOn) {
+    const taskTime = new Date(task.startTime);
+    const trigger = new Date(task.startTime);
+    trigger.setSeconds(trigger.getSeconds() - task.reminderTime);
+
+    const taskDate = new Date(task.date);
+    const today = new Date();
+
+    let dateString;
+    if (
+      taskDate.getDate() === today.getDate() &&
+      taskDate.getMonth() === today.getMonth() &&
+      taskDate.getFullYear() === today.getFullYear()
+    ) {
+      dateString = "today";
+    } else {
+      dateString = taskDate.toLocaleDateString();
+    }
+
+    const notificationId = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Hey! Reminder 🔔",
+        body: `Get ready,you have ${task.title} ${dateString} at ${taskTime.toLocaleTimeString()}.`,
+      },
+      trigger,
+    });
+  }
+}
+
+// Function to schedule notifications for all tasks in a category list
+export async function scheduleNotificationsForCategoryList(categoryList) {
+  categoryList.forEach(category => {
+    category.items.forEach(scheduleTaskNotification);
+  });
+}
+
+
+// Function to get all scheduled notifications
+export async function getAllScheduledNotifications() {
+  const notifications = await Notifications.getAllScheduledNotificationsAsync();
+  console.log(notifications);
+}
+getAllScheduledNotifications();
+
+
+
+//  cancel notification function
+export async function cancelTaskNotification(notificationId) {
+  await Notifications.cancelScheduledNotificationAsync(notificationId);
+}
