@@ -107,9 +107,9 @@ const styles =StyleSheet.create({
         color:"#F4E6E6"
     },
     time:{
+        color:"rgba(57, 54, 54, 0.8)",
         fontFamily:"Inter",
         fontSize:14,
-        color:"#F4E6E6",
         marginLeft:Dimensions.get("window").width/2-20
     },
     notiComponent:{

@@ -19,7 +19,10 @@ Notifications.setNotificationHandler({
 
 
 // Fetch the motivation from the server
-async function fetchMotivation(setMotivationList, MotivationList) {
+async function fetchMotivation(setMotivationList, MotivationList,DailyMotivation) {
+  if (!DailyMotivation) {
+    return;
+  }
   try {
     const lastFetchDate = await AsyncStorage.getItem('lastFetchDate');
     const currentDate = new Date().toISOString().split('T')[0]; // Get the current date
@@ -46,8 +49,6 @@ async function fetchMotivation(setMotivationList, MotivationList) {
   }
 }
 
-
-
 // Main notification function
 export default function Notification() {
   const [notification, setNotification] = useState(false);
@@ -56,9 +57,12 @@ export default function Notification() {
   const setMotivationList = useStore((state) => state.setMotivationList);
   const MotivationList = useStore((state) => state.MotivationList);
   const categoryList = useStore((state) => state.CategoryList);
+  const motiTime = useStore((state) => state.MotiTime);
+  const DailyMotivation = useStore((state) => state.DailyMotivation);
+
 
   useEffect(() => {
-    fetchMotivation(setMotivationList, MotivationList);
+    fetchMotivation(setMotivationList, MotivationList,DailyMotivation);
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
@@ -75,21 +79,26 @@ export default function Notification() {
   }, []);
 
   useEffect(() => {
-    scheduleMotivationNotification(MotivationList);
+    scheduleMotivationNotification(MotivationList,motiTime,DailyMotivation);
     scheduleNotificationsForCategoryList(categoryList);
 
-  }, [MotivationList,categoryList]); 
+  }, [MotivationList, categoryList, DailyMotivation, motiTime]); 
+
 }
 
 
 // Motivation notify function
-export async function scheduleMotivationNotification(MotivationList) {
+export async function scheduleMotivationNotification(MotivationList, MotiTime,DailyMotivation) {
+  if (!DailyMotivation) {
+    return;
+  }
+  console.log("moti list ",MotivationList);
 
   await Notifications.cancelAllScheduledNotificationsAsync();
 
   const moti = MotivationList[MotivationList.length -1];
-  console.log(moti.motiID)
-  console.log(MotivationList);
+  const [motiTimeHour, MotiTimeMinutes] = MotiTime
+  const seconds = motiTimeHour*3600 + MotiTimeMinutes*60;
   await Notifications.scheduleNotificationAsync({
     content: {
       title: "Daily Motivation 🌞",
@@ -97,14 +106,11 @@ export async function scheduleMotivationNotification(MotivationList) {
       
     },
     trigger: { 
-      hour: 5, 
-      minute: 0, 
-      repeats: true
+      seconds: seconds, 
+      repeats: false
      },
   });
-
 }
-
 
 // task reminder function
 export async function scheduleTaskNotification(task) {
@@ -126,7 +132,6 @@ export async function scheduleTaskNotification(task) {
     } else {
       dateString = taskDate.toLocaleDateString();
     }
-
     const notificationId = await Notifications.scheduleNotificationAsync({
       content: {
         title: "Hey! Reminder 🔔",
@@ -136,6 +141,7 @@ export async function scheduleTaskNotification(task) {
     });
   }
 }
+
 
 // Function to schedule notifications for all tasks in a category list
 export async function scheduleNotificationsForCategoryList(categoryList) {
@@ -148,13 +154,23 @@ export async function scheduleNotificationsForCategoryList(categoryList) {
 // Function to get all scheduled notifications
 export async function getAllScheduledNotifications() {
   const notifications = await Notifications.getAllScheduledNotificationsAsync();
-  console.log(notifications);
+  console.log("shedule notifications :",notifications);
 }
 getAllScheduledNotifications();
 
 
 
 //  cancel notification function
-export async function cancelTaskNotification(notificationId) {
-  await Notifications.cancelScheduledNotificationAsync(notificationId);
+export async function cancelTaskNotification(id) {
+  await Notifications.cancelScheduledNotificationAsync(id);
 }
+
+
+//  cancel all scheduled notifications function
+export async function cancelAllTaskNotifications() {
+  await Notifications.cancelAllScheduledNotificationsAsync();
+}
+//cancelAllTaskNotifications();
+
+
+

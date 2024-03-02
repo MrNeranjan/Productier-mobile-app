@@ -1,39 +1,46 @@
 import React, { useState } from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, StatusBar, ScrollView,KeyboardAvoidingView, Dimensions,Vibration } from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, StatusBar, ScrollView,KeyboardAvoidingView, Dimensions,Vibration,Platform } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import ToggleSwitch from 'toggle-switch-react-native'
 import { useFonts } from "expo-font";
 import { useNavigation } from '@react-navigation/native';
+import { useStore } from '../store/Store';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 
 export default function NotificationsPage() {
     // notification handling 
-    const [DailyMotivation, setDailyMotivation] = useState(false);
-    const [GeneralNotifications, setGeneralNotifications] = useState(false);
-    const [VibrationEnabled,setVibration] =useState(false);
-
+    const { setMotiTime,setDailyMotivation,DailyMotivation,MotiTime } = useStore();
+    const [GeneralNotifications, setGeneralNotifications] = useState(true);
+    const [show, setShow] = useState(false);
+    const [time, setTime] = useState(new Date());
+    
     const navigation = useNavigation();
 
     const [fontsLoaded] = useFonts({
         "Inter": require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf")
     });
 
-    // vibration handler
-    function VibrationHandler(){
-        if (!VibrationEnabled){
-            Vibration.vibrate()
-        }
-        setVibration(!VibrationEnabled);
-        
-    }
-    // go back 
+    const onChange = (event, selectedTime) => {
+        const currentTime = selectedTime;
+        setShow(Platform.OS === 'ios');
+        setTime(currentTime);
+        const hours = currentTime.getHours();
+        const minutes = currentTime.getMinutes();
+        setMotiTime([hours, minutes]);
+      };
 
+    const showTimepicker = () => {
+        setShow(true);
+      };
+    
+
+    // go back 
     function GoBack(){
         navigation.goBack();
     }
-
-
 
     return (
         <LinearGradient
@@ -64,10 +71,27 @@ export default function NotificationsPage() {
                             onColor="green"
                             offColor="rgba(57, 54, 54, 0.8)"
                             size="small"
-                            onToggle={() => setDailyMotivation(!DailyMotivation)}
-                        
+                            onToggle={() => {
+                                const newDailyMotivation = !DailyMotivation;
+                                setDailyMotivation(newDailyMotivation);
+                                if (newDailyMotivation) {
+                                  showTimepicker();
+                                } else {
+                                  setShow(false);
+                                }
+                              }}
                         />
                     </View>
+                    {show && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={time}
+                            mode={'time'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={onChange}
+                        />
+                        )}
                     <View style ={styles.notify}>
                         <Text style={[styles.title]}>
                             General Notifications
@@ -82,21 +106,6 @@ export default function NotificationsPage() {
                         
                         />
                     </View>
-                    <View style ={styles.notify}>
-                        <Text style={[styles.title]}>
-                            Vibration
-                        </Text>
-                        <ToggleSwitch
-                            style ={styles.switch}
-                            isOn={VibrationEnabled}
-                            onColor="green"
-                            offColor="rgba(57, 54, 54, 0.8)"
-                            size="small"
-                            onToggle={VibrationHandler}
-                        
-                        />
-                    </View>
-                    
                 </View>
             </KeyboardAvoidingView>
         </ScrollView>

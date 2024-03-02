@@ -54,7 +54,7 @@ export default function LoginPage(){
                 console.log("User does not exist"); 
             }
         } catch (error) {
-            console.error('Error checking user existence:', error);
+            Alert.alert("Network Error", "Please check your internet connection and try again.")
         }
     }
 

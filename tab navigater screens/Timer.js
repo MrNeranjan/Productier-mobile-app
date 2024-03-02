@@ -98,7 +98,7 @@ export default function Analysis(){
                                                             onChangeText={DaysHandler}
                                                             keyboardType='numeric'
                                                             maxLength={3}
-                                                            value={(days)}
+                                                            value={String(days)}
                                                         />
                                                 </View>
                                             
@@ -112,7 +112,7 @@ export default function Analysis(){
                                                     <TextInput
                                                     
                                                            
-                                                            value={(hours)}
+                                                            value={String(hours)}
                                                             placeholder='00'
                                                             style={{alignSelf:"center",padding:2,fontSize:18}}
                                                             onChangeText={(text)=>{
@@ -149,7 +149,7 @@ export default function Analysis(){
                                                         }}
                                                         keyboardType='numeric'
                                                         maxLength={2}
-                                                        value={(Minutes)}
+                                                        value={String(Minutes)}
                                                     />
                                                 </View>
                                         </View>

@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useFonts } from "expo-font";
 import {useStore} from "../store/Store.js";
 import { useState } from "react";
+import { Linking,Alert } from 'react-native';
 import * as MailComposer from 'expo-mail-composer';
 
 function SettingSection({iconName,settingName,navigatePage}){
@@ -19,7 +20,7 @@ function SettingSection({iconName,settingName,navigatePage}){
     });
 
 
-    function navigate(){
+    async function navigate(){
         if (navigatePage === "sendmail" || navigatePage === "help&support"){
 
             MailComposer.composeAsync({
@@ -28,9 +29,31 @@ function SettingSection({iconName,settingName,navigatePage}){
                 body: navigatePage === "sendmail" ? 'Please enter your feedback here...' : "We're here to assist you. How may we help?", // Body of the email
               })
 
-        }else{
-            navigation.navigate(navigatePage);
-        }
+            } else if (navigatePage === "Privacy") {
+                const url = 'https://sites.google.com/view/ongoal-task-scheduler-app/home';
+                if (await Linking.canOpenURL(url)) {
+                  await Linking.openURL(url);
+                } else {
+                    Alert.alert("Please try again later.")
+                  console.error('Could not open URL');
+                }
+              } else if (navigatePage === "pro") {
+                Alert.alert(
+                    "Upgrade to Pro", 
+                    "This feature will be added soon.", 
+                    [
+                      {
+                        text: "OK", 
+                        onPress: () => console.log("OK Pressed"), 
+                      },
+                    ],
+                    { cancelable: false } 
+                  );
+              } else {
+                navigation.navigate(navigatePage);
+              }
+            
+        
         
     }
 
@@ -129,14 +152,14 @@ export default function Settings(){
                 />
                 <SettingSection
                     iconName="shield"
-                    settingName="Security"
-                    navigatePage=""
+                    settingName="Privacy Policy"
+                    navigatePage="Privacy"
                 
                 />
                 <SettingSection
                     iconName="star"
                     settingName="Upgrade to Pro"
-                    navigatePage=""
+                    navigatePage="pro"
                 
                 />
 

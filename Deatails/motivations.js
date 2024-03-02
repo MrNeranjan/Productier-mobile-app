@@ -8,4 +8,6 @@ const motivations =[
       
 ]
 
-export default motivations;
+const motiTime = [5,0];
+
+export default {motivations,motiTime};
