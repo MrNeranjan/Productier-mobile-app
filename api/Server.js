@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const nodemailer = require("nodemailer");
 const moment = require("moment");
 
 const app = express();
@@ -30,10 +31,6 @@ app.listen(port, () => {
   console.log("Server is running on port 3000");
 });
 
-
-
-
-
 // end point for user registration
 const User = require("./schemas/userRegDetails");
 app.post("/UserRegister", async (req, res) => {
@@ -43,7 +40,12 @@ app.post("/UserRegister", async (req, res) => {
     // Check if a user with the same email already exists
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
-      return res.status(409).json({ message: "You have already registered.If you want register again please use another email." });
+      return res
+        .status(409)
+        .json({
+          message:
+            "You have already registered.If you want register again please use another email.",
+        });
     }
 
     const user = new User({
@@ -67,12 +69,9 @@ app.post("/UserRegister", async (req, res) => {
   }
 });
 
-
-
-
 // Endpoint to check if a user exists
 const bcrypt = require("react-native-bcrypt");
-app.get('/checkUser', async (req, res) => {
+app.get("/checkUser", async (req, res) => {
   const { email, password } = req.query;
 
   try {
@@ -81,7 +80,7 @@ app.get('/checkUser', async (req, res) => {
 
     if (user) {
       // User exists, now we need to check the password
-      bcrypt.compare(password, user.password, function(err, result) {
+      bcrypt.compare(password, user.password, function (err, result) {
         if (result) {
           // Passwords match
           return res.json({ exists: true });
@@ -96,13 +95,13 @@ app.get('/checkUser', async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
 // change password endpoint
-app.post("/changePassword", async(req, res) => {
-  const {email, oldPassword, newPassword} = req.body;
+app.post("/changePassword", async (req, res) => {
+  const { email, oldPassword, newPassword } = req.body;
   try {
     // Query the database for the user
     const user = await User.findOne({ email: email });
@@ -110,7 +109,9 @@ app.post("/changePassword", async(req, res) => {
     // Check if the old password is correct
     bcrypt.compare(oldPassword, user.password, (err, isMatch) => {
       if (err) {
-        return res.status(500).json({ message: "Error comparing passwords", error: err });
+        return res
+          .status(500)
+          .json({ message: "Error comparing passwords", error: err });
       }
 
       if (!isMatch) {
@@ -120,7 +121,9 @@ app.post("/changePassword", async(req, res) => {
       // Hash the new password and update the user
       bcrypt.hash(newPassword, 10, async (err, hashedPassword) => {
         if (err) {
-          return res.status(500).json({ message: "Error hashing password", error: err });
+          return res
+            .status(500)
+            .json({ message: "Error hashing password", error: err });
         }
 
         user.password = hashedPassword;
@@ -131,16 +134,16 @@ app.post("/changePassword", async(req, res) => {
     });
   } catch (error) {
     console.error(error); // Log the error to the console
-    res.status(500).json({ message: "Error changing password", error: error.toString() });
+    res
+      .status(500)
+      .json({ message: "Error changing password", error: error.toString() });
   }
 });
 
-
-// fetching the motivations 
+// fetching the motivations
 const Motivation = require("./schemas/motivation");
-app.get('/getMotivation', async (req, res) => {
-
-  const {motiID} = req.query;
+app.get("/getMotivation", async (req, res) => {
+  const { motiID } = req.query;
 
   try {
     const motivation = await Motivation.findOne({ motiID: motiID });
@@ -150,11 +153,49 @@ app.get('/getMotivation', async (req, res) => {
       res.json(motivation);
       console.log("Motivation fetched");
     } else {
-      res.status(404).json({ message: 'Motivation not found' });
+      res.status(404).json({ message: "Motivation not found" });
       console.log("Motivation not found");
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
+
+// forget password endpoint
+    
+app.post("/forgotPassword", async (req, res) => {
+  const {email,OTP} = req.body;
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    port :465,
+    secure : true,
+    logger : true,
+    debug : true,
+    secureConnection : false,
+    auth: {
+      user: "ongoal.devpteam@gmail.com",
+      pass: "Ongoaldevp#2001",
+    },
+    tls: {
+      rejectUnauthorized: true,
+    },
+  });
+  try {
+    // Try to send the OTP to the user's email
+    await transporter.sendMail({
+      from: 'ongoal.devpteam@gmail.com',
+      to: email,
+      subject: 'Reset Password OTP',
+      text: `Your OTP is ${OTP}`
+    });
+    
+    res.send('OTP sent');
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    res.status(500).send(`Error sending OTP: ${error.message}`);
   }
 });

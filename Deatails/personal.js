@@ -10,4 +10,4 @@ const personalDetails=
         IsLogin : false,
     }
 
-    export default personalDetails;
+export default personalDetails;

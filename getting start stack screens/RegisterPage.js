@@ -26,9 +26,8 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, SetPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
-  const [RegisterStatus,setIsRegistered] = useState(true);
+  const [RegisterStatus, setIsRegistered] = useState(true);
   const setPersonalDetails = useStore((state) => state.setPersonalDetails);
-
 
   const [fontsLoaded] = useFonts({
     Inter: require("../assets/sources/fonts/Inter-VariableFont_slnt,wght.ttf"),
@@ -62,37 +61,33 @@ export default function RegisterPage() {
     setLast_name(last_name);
   }
 
-  // Email save to store 
-  function saveEmail(){
+  // Email save to store
+  function saveEmail() {
     try {
-      setPersonalDetails({email : email})
+      setPersonalDetails({ email: email });
     } catch (error) {
-      console.error('Error in sayingRegister:', error);
+      console.error("Error in sayingRegister:", error);
     }
   }
-  
-  
-// function to set the register status to true 
 
-function sayingRegister() {
-  try {
-    setPersonalDetails({ IsRegistered: RegisterStatus });
-    console.log("Register status set to true");
-  } catch (error) {
-    console.error('Error in sayingRegister:', error);
+  // function to set the register status to true
+
+  function sayingRegister() {
+    try {
+      setPersonalDetails({ IsRegistered: RegisterStatus });
+      console.log("Register status set to true");
+    } catch (error) {
+      console.error("Error in sayingRegister:", error);
+    }
   }
-}
 
+  function Encrypter(password) {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+    return hash;
+  }
 
-function Encrypter(password){
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt);
-  return hash;
-}
-
-
-
-// handler for register button
+  // handler for register button
   function RegisterHandler() {
     const hashedPassword = Encrypter(password);
     const newUser = {
@@ -101,8 +96,9 @@ function Encrypter(password){
       email: email,
       password: hashedPassword,
     };
-  
-    axios.post("http://192.168.8.178:3000/UserRegister", newUser)
+
+    axios
+      .post("http://192.168.8.178:3000/UserRegister", newUser)
       .then((response) => {
         Alert.alert(
           "Registration Successful",
